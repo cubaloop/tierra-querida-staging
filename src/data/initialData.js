@@ -5,7 +5,7 @@ export const RESTAURANT_INFO = {
   "name": "Tierra Querida",
   "phone": "+971568460179",
   "whatsappLink": "https://wa.me/971568460179",
-  "address": "Business Bay, Dubai, UAE",
+  "address": "Al Faris Mall Shop, Dubai, UAE",
   "email": "info@tierraqueridadubai.com",
   "instagram": "https://www.instagram.com/colombianasendubai",
   "tiktok": "https://www.tiktok.com/@tierraqueridadubai",
@@ -26,12 +26,13 @@ export const RESTAURANT_INFO = {
   "gridImage4": "",
   "heroBadge": "Auténtico Sabor Colombiano en Dubái",
   "heroTitle": "El Sabor de Nuestra Tierra en el Corazón de Dubái",
-  "heroSubtitle": "Disfruta de la mejor gastronomía colombiana, preparada diariamente con ingredientes frescos y recetas tradicionales.",
+  "heroSubtitle": "Una experiencia gastronómica que fusiona la tradición andina con la sofisticación culinaria moderna. Del campo colombiano a Al Faris Mall, Dubái, directo a tu hogar.",
   "heroVideoUrl": "",
   "logoUrl": "",
   "schedule": "Lunes a Domingo: 11:00 AM - 11:00 PM",
   "allergenNotice": "Si sufres de alergias alimenticias, indícalo en el formulario de Checkout o ponte en contacto con nuestro equipo por WhatsApp antes de ordenar.",
-  "deliveryFee": 20
+  "deliveryFee": 20,
+  "cardPaymentEnabled": false
 };
 
 export const CATEGORIES = [

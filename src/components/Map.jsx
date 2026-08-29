@@ -19,7 +19,7 @@ export default function Map() {
           </div>
 
           <p className="text-sm text-on-surface-variant leading-relaxed">
-            Nuestro restaurante está ubicado en el dinámico distrito financiero de **Business Bay**. Un espacio diseñado para transportarte a las montañas colombianas a través del sabor, el aroma de café y la hospitalidad.
+            Nos encontramos en el <strong>Al Faris Mall</strong>, un espacio diseñado para transportarte a las montañas colombianas a través del sabor, el aroma de café y la hospitalidad latina en el corazón de Dubái.
           </p>
 
           <div className="space-y-4 pt-4 border-t border-outline-variant/20">
@@ -27,7 +27,7 @@ export default function Map() {
               <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold text-on-surface">Dirección Oficial</p>
-                <p className="text-on-surface-variant mt-0.5">{info.address}</p>
+                <p className="text-on-surface-variant mt-0.5">Al Faris Mall Shop, Dubai, UAE</p>
               </div>
             </div>
             
@@ -35,21 +35,25 @@ export default function Map() {
               <Car className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold text-on-surface">Parqueadero</p>
-                <p className="text-on-surface-variant mt-0.5">Disponibilidad de RTA Parking y Valet Parking en la torre comercial.</p>
+                <p className="text-on-surface-variant mt-0.5">Estacionamiento disponible en Al Faris Mall.</p>
               </div>
             </div>
 
             <div className="flex items-start space-x-3 text-sm">
               <Landmark className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div>
-                <p className="font-bold text-on-surface">Puntos de Referencia</p>
-                <p className="text-on-surface-variant mt-0.5">A 5 minutos de Business Bay Metro Station, muy cerca del canal de Dubai.</p>
+                <p className="font-bold text-on-surface">Reserva de Mesa</p>
+                <p className="text-on-surface-variant mt-0.5">
+                  Reservamos mesa para <strong>grupos de hasta 6 personas</strong>.<br />
+                  Precio: <strong>15 AED por hora</strong>.<br />
+                  Contáctanos por WhatsApp para coordinar tu reserva.
+                </p>
               </div>
             </div>
           </div>
 
           <a
-            href={`https://www.google.com/maps/search/?api=1&query=Business+Bay+Dubai`}
+            href={`https://www.google.com/maps/search/?api=1&query=Al+Faris+Mall+Dubai`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center space-x-2 bg-primary text-background text-xs font-bold uppercase tracking-widest px-6 py-3.5 hover:bg-primary-container transition-all rounded-sm shadow-md"
@@ -62,9 +66,9 @@ export default function Map() {
         {/* Map Iframe Container */}
         <div className="lg:col-span-7 h-[350px] md:h-[450px] w-full bg-surface-container-high rounded-sm border border-outline-variant/15 overflow-hidden relative shadow-inner">
           <iframe
-            title="Tierra Querida Business Bay Dubai Map"
-            src="https://maps.google.com/maps?q=Business%20Bay,%20Dubai&t=&z=15&ie=UTF8&iwloc=&output=embed"
-            className="absolute inset-0 w-full h-full border-0 grayscale opacity-90 contrast-110"
+            title="Tierra Querida Al Faris Mall Dubai Map"
+            src="https://maps.google.com/maps?q=Al+Faris+Mall+Dubai&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            className="absolute inset-0 w-full h-full border-0"
             allowFullScreen=""
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"

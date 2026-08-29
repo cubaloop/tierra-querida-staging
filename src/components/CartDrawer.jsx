@@ -146,7 +146,7 @@ export default function CartDrawer({
                   <span>{subtotal} AED</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Domicilio (Business Bay)</span>
+                  <span>Domicilio</span>
                   <span>{deliveryFee} AED</span>
                 </div>
                 <div className="flex justify-between text-base font-bold text-primary pt-2 border-t border-outline-variant/20">

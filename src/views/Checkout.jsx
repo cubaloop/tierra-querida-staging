@@ -562,33 +562,35 @@ Tierra Querida Restaurant & Café Dubai
                 />
               </label>
 
-              {/* CARD (Stripe) */}
-              <label
-                className={`p-4 border rounded-sm cursor-pointer flex justify-between items-center transition-all ${
-                  formData.paymentMethod === "card"
-                    ? "border-primary bg-surface-container text-primary font-semibold"
-                    : "border-outline-variant/30 bg-surface-container-low text-on-surface-variant"
-                }`}
-              >
-                <div className="flex items-center space-x-3">
-                  <CreditCard className="w-5 h-5 text-primary" />
-                  <div>
-                    <p className="text-sm font-semibold">Tarjeta de Crédito / Pago Online Seguro</p>
-                    <p className="text-xs text-on-surface-variant/80 mt-0.5">Procesado de forma segura en EAU a través de Stripe.</p>
+              {/* CARD (Stripe) - Controllable from Admin Panel */}
+              {info.cardPaymentEnabled && (
+                <label
+                  className={`p-4 border rounded-sm cursor-pointer flex justify-between items-center transition-all ${
+                    formData.paymentMethod === "card"
+                      ? "border-primary bg-surface-container text-primary font-semibold"
+                      : "border-outline-variant/30 bg-surface-container-low text-on-surface-variant"
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <CreditCard className="w-5 h-5 text-primary" />
+                    <div>
+                      <p className="text-sm font-semibold">Tarjeta de Crédito / Pago Online Seguro</p>
+                      <p className="text-xs text-on-surface-variant/80 mt-0.5">Procesado de forma segura en EAU a través de Stripe.</p>
+                    </div>
                   </div>
-                </div>
-                <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="card"
-                  checked={formData.paymentMethod === "card"}
-                  onChange={handleInputChange}
-                  className="w-4 h-4 text-primary border-outline-variant focus:ring-primary focus:ring-1"
-                />
-              </label>
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="card"
+                    checked={formData.paymentMethod === "card"}
+                    onChange={handleInputChange}
+                    className="w-4 h-4 text-primary border-outline-variant focus:ring-primary focus:ring-1"
+                  />
+                </label>
+              )}
 
               {/* Card Form Mock */}
-              {formData.paymentMethod === "card" && (
+              {info.cardPaymentEnabled && formData.paymentMethod === "card" && (
                 <div className="p-6 bg-surface-container border border-outline-variant/20 rounded-sm space-y-4 animate-fade-in">
                   <div className="flex items-center justify-between border-b border-outline-variant/15 pb-2.5 mb-2">
                     <span className="text-[10px] font-bold text-primary uppercase tracking-widest flex items-center space-x-1">

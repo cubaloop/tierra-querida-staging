@@ -383,7 +383,7 @@ export const getDishes = () => {
   return read(DISHES_KEY, []);
 };
 
-export const saveDish = (dish) => {
+export const saveDish = async (dish) => {
   const dishes = getDishes();
   if (dish.id) {
     const index = dishes.findIndex(d => d.id === dish.id);
@@ -408,23 +408,21 @@ export const saveDish = (dish) => {
       options_title: dish.optionsTitle || "",
       options_choices: dish.optionsChoices || ""
     };
-    supabase.from("dishes").upsert(dbDish).then(({ error }) => {
-      if (error) console.error("Error upserting dish to Supabase:", error);
-    });
+    const { error } = await supabase.from("dishes").upsert(dbDish);
+    if (error) console.error("Error upserting dish to Supabase:", error);
   }
   return dish;
 };
 
-export const deleteDish = (id) => {
+export const deleteDish = async (id) => {
   const idStr = String(id);
   const dishes = getDishes();
   const filtered = dishes.filter(d => String(d.id) !== idStr);
   write(DISHES_KEY, filtered);
 
   if (isSupabaseConfigured) {
-    supabase.from("dishes").delete().eq("id", idStr).then(({ error }) => {
-      if (error) console.error("Error deleting dish from Supabase:", error);
-    });
+    const { error } = await supabase.from("dishes").delete().eq("id", idStr);
+    if (error) console.error("Error deleting dish from Supabase:", error);
   }
 };
 
@@ -537,7 +535,7 @@ export const getPromotions = () => {
   return read(PROMOTIONS_KEY, []);
 };
 
-export const savePromotion = (promo) => {
+export const savePromotion = async (promo) => {
   const promotions = getPromotions();
   const promoIdStr = promo.id ? String(promo.id) : ("promo-" + Date.now());
   const promoToSave = {
@@ -559,23 +557,21 @@ export const savePromotion = (promo) => {
       text: promoToSave.text,
       image: promoToSave.image || ""
     };
-    supabase.from("promotions").upsert(dbPromo).then(({ error }) => {
-      if (error) console.error("Error inserting promo to Supabase:", error);
-    });
+    const { error } = await supabase.from("promotions").upsert(dbPromo);
+    if (error) console.error("Error inserting promo to Supabase:", error);
   }
   return promoToSave;
 };
 
-export const deletePromotion = (id) => {
+export const deletePromotion = async (id) => {
   const idStr = String(id);
   const promotions = getPromotions();
   const filtered = promotions.filter(p => String(p.id) !== idStr);
   write(PROMOTIONS_KEY, filtered);
 
   if (isSupabaseConfigured) {
-    supabase.from("promotions").delete().eq("id", idStr).then(({ error }) => {
-      if (error) console.error("Error deleting promo from Supabase:", error);
-    });
+    const { error } = await supabase.from("promotions").delete().eq("id", idStr);
+    if (error) console.error("Error deleting promo from Supabase:", error);
   }
 };
 
@@ -599,7 +595,7 @@ export const getRestaurantInfo = () => {
   return info;
 };
 
-export const saveRestaurantInfo = (info) => {
+export const saveRestaurantInfo = async (info) => {
   if (info.phone) {
     const cleanPhone = info.phone.replace(/[^0-9]/g, "");
     info.whatsappLink = `https://wa.me/${cleanPhone}`;
@@ -638,25 +634,10 @@ export const saveRestaurantInfo = (info) => {
       allergen_notice: info.allergenNotice || "",
       delivery_fee: Number(info.deliveryFee ?? 20)
     };
-    supabase.from("restaurant_info").upsert(dbInfo).then(({ error }) => {
-      if (error) {
-        console.warn("Supabase info update notice (fallback to core columns):", error.message);
-        const fallbackDbInfo = {
-          id: "default",
-          name: info.name,
-          phone: info.phone,
-          whatsapp_link: info.whatsappLink,
-          address: info.address,
-          email: info.email || "",
-          instagram: info.instagram || "",
-          tiktok: info.tiktok || "",
-          facebook: info.facebook || "",
-          story_title: info.storyTitle || "",
-          story_text: info.storyText || ""
-        };
-        supabase.from("restaurant_info").upsert(fallbackDbInfo);
-      }
-    });
+    const { error } = await supabase.from("restaurant_info").upsert(dbInfo);
+    if (error) {
+      console.warn("Supabase info update notice:", error.message);
+    }
   }
   return info;
 };

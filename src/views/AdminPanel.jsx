@@ -106,7 +106,8 @@ export default function AdminPanel({
     heroSubtitle: "",
     schedule: "",
     allergenNotice: "",
-    deliveryFee: 20
+    deliveryFee: 20,
+    cardPaymentEnabled: false
   });
 
   // Sync state if props change
@@ -139,7 +140,8 @@ export default function AdminPanel({
         heroSubtitle: restaurantInfo.heroSubtitle || "",
         schedule: restaurantInfo.schedule || "",
         allergenNotice: restaurantInfo.allergenNotice || "",
-        deliveryFee: restaurantInfo.deliveryFee != null ? restaurantInfo.deliveryFee : 20
+        deliveryFee: restaurantInfo.deliveryFee != null ? restaurantInfo.deliveryFee : 20,
+        cardPaymentEnabled: !!restaurantInfo.cardPaymentEnabled
       });
     }
   }, [restaurantInfo]);
@@ -163,11 +165,16 @@ export default function AdminPanel({
     }
   };
 
-  const handleInfoSubmit = (e) => {
+  const handleInfoSubmit = async (e) => {
     e.preventDefault();
-    saveRestaurantInfo(infoForm);
-    if (onRefreshInfo) onRefreshInfo();
-    alert("Datos de contacto actualizados correctamente.");
+    try {
+      await saveRestaurantInfo(infoForm);
+      if (onRefreshInfo) onRefreshInfo();
+      alert("Datos de contacto y configuración actualizados correctamente.");
+    } catch (err) {
+      console.error("Error al guardar datos:", err);
+      alert("Error al guardar en el servidor. Por favor intenta de nuevo.");
+    }
   };
 
   const handleInfoReset = () => {
@@ -336,21 +343,25 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
     }
   };
 
-  const handleDeletePromoClick = (id) => {
+  const handleDeletePromoClick = async (id) => {
     if (window.confirm("¿Seguro que deseas eliminar esta promoción?")) {
-      deletePromotion(id);
-      onRefreshPromotions();
+      try {
+        await deletePromotion(id);
+        if (onRefreshPromotions) onRefreshPromotions();
+      } catch (err) {
+        console.error("Error al eliminar promo:", err);
+      }
     }
   };
 
   const handleResetPromotionsClick = () => {
     if (window.confirm("¿Deseas restablecer las promociones por defecto? Se perderán todos tus cambios.")) {
       resetPromotions();
-      onRefreshPromotions();
+      if (onRefreshPromotions) onRefreshPromotions();
     }
   };
 
-  const handlePromoSubmit = (e) => {
+  const handlePromoSubmit = async (e) => {
     e.preventDefault();
     const promoToSave = {
       text: promoForm.text,
@@ -359,10 +370,15 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
     if (promoForm.id) {
       promoToSave.id = promoForm.id;
     }
-    savePromotion(promoToSave);
-    setEditingPromo(null);
-    if (onRefreshPromotions) onRefreshPromotions();
-    alert("¡Promoción guardada exitosamente!");
+    try {
+      await savePromotion(promoToSave);
+      setEditingPromo(null);
+      if (onRefreshPromotions) onRefreshPromotions();
+      alert("¡Promoción guardada exitosamente!");
+    } catch (err) {
+      console.error("Error al guardar promoción:", err);
+      alert("Error al guardar promoción en el servidor.");
+    }
   };
 
   const handleEditClick = (dish) => {
@@ -446,22 +462,26 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
     }
   };
 
-  const handleDeleteClick = (id) => {
+  const handleDeleteClick = async (id) => {
     if (window.confirm("¿Seguro que deseas eliminar este plato?")) {
-      deleteDish(id);
-      if (onRefreshDishes) onRefreshDishes();
-      alert("¡Plato eliminado exitosamente!");
+      try {
+        await deleteDish(id);
+        if (onRefreshDishes) onRefreshDishes();
+        alert("¡Plato eliminado exitosamente!");
+      } catch (err) {
+        console.error("Error al eliminar plato:", err);
+      }
     }
   };
 
   const handleResetClick = () => {
     if (window.confirm("¿Deseas restablecer la carta original por defecto? Se perderán todos tus cambios.")) {
       resetDishes();
-      onRefreshDishes();
+      if (onRefreshDishes) onRefreshDishes();
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Parse tags
@@ -495,9 +515,15 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
       dishToSave.options = optionsObject;
     }
 
-    saveDish(dishToSave);
-    setEditingDish(null);
-    onRefreshDishes();
+    try {
+      await saveDish(dishToSave);
+      setEditingDish(null);
+      if (onRefreshDishes) onRefreshDishes();
+      alert("¡Plato guardado exitosamente!");
+    } catch (err) {
+      console.error("Error al guardar plato:", err);
+      alert("Error al guardar plato en el servidor.");
+    }
   };
 
   const filteredDishes = (filterCategory === "all"
@@ -1574,6 +1600,47 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
                         onChange={handleInfoInputChange}
                         className="bg-background border border-outline-variant/30 text-on-surface px-3 py-2 text-xs rounded-sm outline-none focus:border-primary"
                       />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-outline-variant/20 pt-6 space-y-4">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary block">
+                    Configuración de Pedidos & Pagos
+                  </span>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col space-y-1">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Precio Domicilio / Delivery Fee (AED)</label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        name="deliveryFee"
+                        value={infoForm.deliveryFee != null ? infoForm.deliveryFee : 20}
+                        onChange={handleInfoInputChange}
+                        className="bg-background border border-outline-variant/30 text-on-surface px-4 py-3 text-sm rounded-sm outline-none focus:border-primary font-mono"
+                      />
+                    </div>
+
+                    <div className="flex flex-col justify-center space-y-2 p-3.5 bg-surface-container-low border border-outline-variant/20 rounded-sm">
+                      <label className="flex items-start space-x-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="cardPaymentEnabled"
+                          checked={!!infoForm.cardPaymentEnabled}
+                          onChange={(e) => setInfoForm(prev => ({ ...prev, cardPaymentEnabled: e.target.checked }))}
+                          className="w-4 h-4 text-primary rounded border-outline-variant focus:ring-primary mt-0.5"
+                        />
+                        <div>
+                          <span className="text-xs font-bold text-on-surface block">Activar Pasarela de Pago Online (Tarjeta / Stripe)</span>
+                          <span className="text-[10px] text-on-surface-variant/70 block mt-0.5">
+                            {infoForm.cardPaymentEnabled 
+                              ? "🟢 Activado: Los clientes pueden pagar con tarjeta o efectivo." 
+                              : "🔴 Desactivado: El sistema funciona únicamente con pedido por ticket al WhatsApp / Efectivo contra entrega."}
+                          </span>
+                        </div>
+                      </label>
                     </div>
                   </div>
                 </div>
