@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Plus, Edit2, Trash2, RotateCcw, Package, ClipboardList, CheckCircle, Clock, Image as ImageIcon, LayoutDashboard, LogOut, Download, DollarSign, ArrowLeft, Settings } from "lucide-react";
+import { Plus, Edit2, Trash2, RotateCcw, Package, ClipboardList, CheckCircle, Clock, Image as ImageIcon, LayoutDashboard, LogOut, Download, DollarSign, ArrowLeft, Settings, Menu as MenuIcon, X as CloseIcon, Eye } from "lucide-react";
 import { saveDish, deleteDish, resetDishes, getOrders, savePromotion, deletePromotion, resetPromotions, logoutUser, saveRestaurantInfo, resetRestaurantInfo, uploadRestaurantImage } from "../utils/db";
 import { CATEGORIES } from "../data/initialData";
 
@@ -77,6 +77,7 @@ export default function AdminPanel({
 }) {
   const [tab, setTab] = useState("dashboard"); // 'dashboard', 'dishes', 'orders', 'promotions', 'contact'
   const [editingDish, setEditingDish] = useState(null); // null means list view, object means edit form, empty object means create form
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Contact Info state
   const [infoForm, setInfoForm] = useState({
@@ -535,10 +536,134 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
   );
 
   return (
-    <div className="flex h-screen bg-[#faf6f6] text-on-surface overflow-hidden font-sans">
+    <div className="flex h-screen bg-[#faf6f6] text-on-surface overflow-hidden font-sans relative">
       
-      {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-outline-variant/30 flex flex-col justify-between shrink-0 shadow-xs">
+      {/* Mobile Drawer Backdrop */}
+      {mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 md:hidden animate-fade-in"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Slide-over Drawer for Mobile */}
+      <div className={`fixed inset-y-0 left-0 w-72 max-w-[85vw] bg-white z-50 flex flex-col justify-between shadow-2xl transform transition-transform duration-300 ease-in-out md:hidden ${
+        mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+      }`}>
+        <div>
+          {/* Mobile Drawer Header */}
+          <div className="p-5 border-b border-outline-variant/20 flex items-center justify-between">
+            <div className="flex items-center space-x-2.5">
+              <span className="font-serif italic text-xl font-bold text-primary">Tierra Querida</span>
+              <span className="bg-primary/10 border border-primary/20 text-primary text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-sm">
+                Admin
+              </span>
+            </div>
+            <button
+              onClick={() => setMobileMenuOpen(false)}
+              className="p-1.5 text-on-surface-variant hover:text-primary rounded-full"
+              aria-label="Cerrar menú"
+            >
+              <CloseIcon className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Navigation Links in Mobile Drawer */}
+          <nav className="p-4 space-y-1.5">
+            <button
+              onClick={() => { setTab("dashboard"); setEditingDish(null); setEditingPromo(null); setMobileMenuOpen(false); }}
+              className={`w-full flex items-center space-x-3 px-4 py-3.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-all ${
+                tab === "dashboard"
+                  ? "bg-primary text-background shadow-xs font-bold"
+                  : "text-on-surface-variant/80 hover:bg-primary/5 hover:text-primary"
+              }`}
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              <span>Resumen</span>
+            </button>
+
+            <button
+              onClick={() => { setTab("dishes"); setEditingDish(null); setEditingPromo(null); setMobileMenuOpen(false); }}
+              className={`w-full flex items-center space-x-3 px-4 py-3.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-all ${
+                tab === "dishes"
+                  ? "bg-primary text-background shadow-xs font-bold"
+                  : "text-on-surface-variant/80 hover:bg-primary/5 hover:text-primary"
+              }`}
+            >
+              <ClipboardList className="w-4 h-4" />
+              <span>Gestionar Carta ({dishes.length})</span>
+            </button>
+
+            <button
+              onClick={() => { setTab("promotions"); setEditingDish(null); setEditingPromo(null); setMobileMenuOpen(false); }}
+              className={`w-full flex items-center space-x-3 px-4 py-3.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-all ${
+                tab === "promotions"
+                  ? "bg-primary text-background shadow-xs font-bold"
+                  : "text-on-surface-variant/80 hover:bg-primary/5 hover:text-primary"
+              }`}
+            >
+              <ImageIcon className="w-4 h-4" />
+              <span>Gestionar Promos ({promotions.length})</span>
+            </button>
+
+            <button
+              onClick={() => { setTab("orders"); setEditingDish(null); setEditingPromo(null); setMobileMenuOpen(false); }}
+              className={`w-full flex items-center space-x-3 px-4 py-3.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-all ${
+                tab === "orders"
+                  ? "bg-primary text-background shadow-xs font-bold"
+                  : "text-on-surface-variant/80 hover:bg-primary/5 hover:text-primary"
+              }`}
+            >
+              <Package className="w-4 h-4" />
+              <span>Historial Pedidos ({orders.length})</span>
+            </button>
+
+            <button
+              onClick={() => { setTab("contact"); setEditingDish(null); setEditingPromo(null); setMobileMenuOpen(false); }}
+              className={`w-full flex items-center space-x-3 px-4 py-3.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-all ${
+                tab === "contact"
+                  ? "bg-primary text-background shadow-xs font-bold"
+                  : "text-on-surface-variant/80 hover:bg-primary/5 hover:text-primary"
+              }`}
+            >
+              <Settings className="w-4 h-4" />
+              <span>Datos & Configuración</span>
+            </button>
+          </nav>
+        </div>
+
+        {/* Drawer Footer */}
+        <div className="p-4 border-t border-outline-variant/20 space-y-2">
+          <button
+            onClick={() => { handleExportMenu(); setMobileMenuOpen(false); }}
+            className="w-full flex items-center justify-center space-x-2 bg-primary/10 border border-primary/20 hover:bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest py-3 rounded-sm transition-colors"
+          >
+            <Download className="w-4 h-4" />
+            <span>Exportar Datos</span>
+          </button>
+          <button
+            onClick={() => { setView("landing"); setMobileMenuOpen(false); }}
+            className="w-full flex items-center justify-center space-x-2 bg-transparent text-on-surface-variant/70 hover:text-primary text-[10px] font-bold uppercase tracking-widest py-2.5 rounded-sm"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Ver Sitio Web</span>
+          </button>
+          <button
+            onClick={() => {
+              logoutUser();
+              onLogout();
+              setView("landing");
+            }}
+            className="w-full flex items-center justify-center space-x-2 bg-red-50 text-red-600 text-[10px] font-bold uppercase tracking-widest py-2.5 rounded-sm"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Cerrar Sesión</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Desktop Sidebar (hidden on mobile) */}
+      <aside className="hidden md:flex w-64 bg-white border-r border-outline-variant/30 flex-col justify-between shrink-0 shadow-xs">
         <div>
           {/* Logo & Brand Header */}
           <div className="p-6 border-b border-outline-variant/20 flex items-center space-x-3">
@@ -649,27 +774,44 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
       </aside>
 
       {/* Main Panel Content Area */}
-      <main className="flex-grow flex flex-col overflow-hidden bg-[#faf6f6]">
-        {/* Top Header */}
-        <header className="h-16 border-b border-outline-variant/20 px-8 flex items-center justify-between shrink-0 bg-white shadow-xs">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-on-surface-variant/70 font-mono">
-            {tab === "dashboard" && "Dashboard / Resumen de Actividad"}
-            {tab === "dishes" && "Dashboard / Gestión de Carta y Precios"}
-            {tab === "promotions" && "Dashboard / Gestión de Anuncios y Promos"}
-            {tab === "orders" && "Dashboard / Registro Histórico de Ventas"}
-            {tab === "contact" && "Dashboard / Configuración de Datos de Contacto"}
-          </h2>
+      <main className="flex-grow flex flex-col overflow-hidden bg-[#faf6f6] w-full">
+        {/* Top Header - Responsive */}
+        <header className="h-14 md:h-16 border-b border-outline-variant/20 px-4 md:px-8 flex items-center justify-between shrink-0 bg-white shadow-xs z-10">
+          <div className="flex items-center space-x-3 min-w-0">
+            {/* Hamburger Button (Mobile Only) */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="p-1.5 -ml-1 text-on-surface hover:text-primary rounded-sm md:hidden"
+              aria-label="Abrir menú"
+            >
+              <MenuIcon className="w-5 h-5" />
+            </button>
+            <h2 className="text-xs md:text-sm font-bold uppercase tracking-wider text-on-surface-variant/80 font-mono truncate">
+              {tab === "dashboard" && "Resumen General"}
+              {tab === "dishes" && "Gestión de Carta"}
+              {tab === "promotions" && "Anuncios y Promos"}
+              {tab === "orders" && "Historial de Pedidos"}
+              {tab === "contact" && "Configuración y Contacto"}
+            </h2>
+          </div>
           
-          <div className="flex items-center space-x-4">
-            <span className="text-xs text-on-surface-variant/70">Conectado como:</span>
-            <span className="text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-3 py-1 rounded-sm">
+          <div className="flex items-center space-x-2 sm:space-x-4 shrink-0">
+            <button
+              onClick={() => setView("landing")}
+              className="md:hidden p-2 text-on-surface-variant hover:text-primary"
+              title="Ver Sitio Web"
+            >
+              <Eye className="w-4 h-4" />
+            </button>
+            <span className="hidden sm:inline text-xs text-on-surface-variant/70">Conectado:</span>
+            <span className="text-[10px] sm:text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-2.5 py-1 rounded-sm">
               Admin
             </span>
           </div>
         </header>
 
-        {/* Scrollable Viewport */}
-        <div className="flex-grow p-8 overflow-y-auto">
+        {/* Scrollable Viewport with mobile bottom navigation padding */}
+        <div className="flex-grow p-3.5 sm:p-6 md:p-8 pb-24 md:pb-8 overflow-y-auto">
           {tab === "dashboard" && (
             <div className="space-y-8 animate-fade-in">
               {/* Stats Row */}
@@ -807,20 +949,20 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
               {editingDish === null ? (
                 // LIST VIEW
                 <>
-                  <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
-                    <h3 className="font-serif text-2xl font-bold text-on-surface">Platos de la Carta</h3>
+                  <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
+                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-on-surface">Platos de la Carta</h3>
                     
-                    <div className="flex gap-3">
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
                       <button
                         onClick={handleResetClick}
-                        className="inline-flex items-center space-x-2 border border-outline-variant/40 bg-white text-on-surface-variant font-bold text-xs uppercase px-4 py-3 tracking-wider hover:bg-[#faf6f6] transition-colors rounded-sm"
+                        className="flex-1 sm:flex-none inline-flex items-center justify-center space-x-1.5 border border-outline-variant/40 bg-white text-on-surface-variant font-bold text-xs uppercase px-3.5 py-2.5 tracking-wider hover:bg-[#faf6f6] transition-colors rounded-sm"
                       >
-                        <RotateCcw className="w-4 h-4" />
-                        <span>Restablecer Carta</span>
+                        <RotateCcw className="w-3.5 h-3.5" />
+                        <span>Restablecer</span>
                       </button>
                       <button
                         onClick={handleAddNewClick}
-                        className="inline-flex items-center space-x-2 bg-primary text-background font-bold text-xs uppercase px-5 py-3 tracking-wider hover:bg-primary-container transition-colors rounded-sm shadow-md"
+                        className="flex-1 sm:flex-none inline-flex items-center justify-center space-x-1.5 bg-primary text-background font-bold text-xs uppercase px-4 py-2.5 tracking-wider hover:bg-primary-container transition-colors rounded-sm shadow-md"
                       >
                         <Plus className="w-4 h-4" />
                         <span>Nuevo Plato</span>
@@ -828,19 +970,19 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
                     </div>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-4">
                     <input
                       type="text"
-                      placeholder="🔍 Buscar plato por nombre o ingredientes..."
+                      placeholder="🔍 Buscar plato por nombre o descripción..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="flex-grow bg-white border border-outline-variant/20 px-4 py-3 text-sm rounded-sm outline-none text-on-surface focus:border-primary focus:ring-1 focus:ring-primary"
+                      className="flex-grow bg-white border border-outline-variant/20 px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm rounded-sm outline-none text-on-surface focus:border-primary focus:ring-1 focus:ring-primary"
                     />
                     
                     <select
                       value={filterCategory}
                       onChange={(e) => setFilterCategory(e.target.value)}
-                      className="bg-white border border-outline-variant/20 px-4 py-3 text-sm rounded-sm outline-none text-on-surface focus:border-primary"
+                      className="bg-white border border-outline-variant/20 px-3.5 py-2.5 sm:py-3 text-xs sm:text-sm rounded-sm outline-none text-on-surface focus:border-primary"
                     >
                       <option value="all">Todas las Categorías</option>
                       {allCategories.map((cat) => (
@@ -852,70 +994,130 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
                   </div>
 
                   {filteredDishes.length === 0 ? (
-                    <div className="text-center py-16 bg-white border border-outline-variant/10 rounded-sm">
+                    <div className="text-center py-12 bg-white border border-outline-variant/10 rounded-sm p-4">
                       <p className="text-sm text-on-surface-variant">No se encontraron platos con los criterios seleccionados.</p>
                     </div>
                   ) : (
-                    <div className="bg-white border border-outline-variant/20 rounded-sm overflow-x-auto shadow-xs">
-                      <table className="w-full text-left border-collapse min-w-[700px]">
-                        <thead>
-                          <tr className="border-b border-outline-variant/20 text-xs font-bold uppercase tracking-widest text-primary bg-surface-container-low">
-                            <th className="p-4 pl-6 w-24">Imagen</th>
-                            <th className="p-4">Nombre / Categoría</th>
-                            <th className="p-4">Descripción</th>
-                            <th className="p-4 w-28">Precio</th>
-                            <th className="p-4 pr-6 text-right w-32">Acciones</th>
-                          </tr>
-                        </thead>
-                        <tbody className="text-sm text-on-surface-variant divide-y divide-outline-variant/15">
-                          {filteredDishes.map((dish) => (
-                            <tr key={dish.id} className="hover:bg-primary/5 transition-colors">
-                              <td className="p-4 pl-6">
-                                {dish.image ? (
-                                  <img
-                                    src={dish.image}
-                                    alt={dish.name}
-                                    className="w-16 h-12 object-cover rounded-sm border border-outline-variant/20 shadow-xs animate-fade-in"
-                                  />
-                                ) : (
-                                  <div className="w-16 h-12 bg-background flex items-center justify-center rounded-sm border border-outline-variant/20 text-[10px] font-bold text-on-surface-variant/40 select-none">
-                                    {dish.name.charAt(0)}
-                                  </div>
-                                )}
-                              </td>
-                              <td className="p-4">
-                                <div className="font-bold text-on-surface">{dish.name}</div>
-                                <div className="text-[10px] text-primary uppercase font-mono tracking-wider mt-0.5">
-                                  {CATEGORIES.find((c) => c.id === dish.category)?.name || dish.category}
+                    <>
+                      {/* Mobile Cards View (Hidden on Desktop) */}
+                      <div className="block md:hidden space-y-3">
+                        {filteredDishes.map((dish) => (
+                          <div key={dish.id} className="bg-white border border-outline-variant/20 p-3.5 rounded-sm shadow-xs space-y-2.5">
+                            <div className="flex space-x-3 items-start">
+                              {dish.image ? (
+                                <img
+                                  src={dish.image}
+                                  alt={dish.name}
+                                  className="w-16 h-16 object-cover rounded-sm border border-outline-variant/20 shrink-0"
+                                />
+                              ) : (
+                                <div className="w-16 h-16 bg-surface-container flex items-center justify-center rounded-sm border border-outline-variant/20 text-xs font-serif italic text-primary/50 font-bold shrink-0">
+                                  {dish.name.charAt(0)}
                                 </div>
-                              </td>
-                              <td className="p-4 text-xs text-on-surface-variant/80 max-w-xs truncate">
-                                {dish.description}
-                              </td>
-                              <td className="p-4 font-mono font-bold text-on-surface">
-                                {dish.price} AED
-                              </td>
-                              <td className="p-4 pr-6 text-right space-x-3">
-                                <button
-                                  onClick={() => handleEditClick(dish)}
-                                  className="inline-flex items-center text-on-surface-variant hover:text-primary transition-colors text-xs font-bold"
-                                  title="Editar plato"
-                                >
-                                  <Edit2 className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={() => handleDeleteClick(dish.id)}
-                                  className="inline-flex items-center text-primary hover:text-red-600 transition-colors text-xs font-bold"
-                                  title="Eliminar plato"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </td>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex justify-between items-start gap-1">
+                                  <h4 className="font-serif font-bold text-sm text-on-surface truncate" title={dish.name}>
+                                    {dish.name}
+                                  </h4>
+                                  <span className="font-mono font-bold text-xs text-primary bg-primary/10 px-2 py-0.5 rounded-sm shrink-0">
+                                    {dish.price} AED
+                                  </span>
+                                </div>
+                                <span className="text-[9px] text-primary font-bold uppercase tracking-wider block mt-0.5">
+                                  {CATEGORIES.find((c) => c.id === dish.category)?.name || dish.category}
+                                </span>
+                                {dish.description && (
+                                  <p className="text-[11px] text-on-surface-variant/80 mt-1 line-clamp-2 leading-relaxed">
+                                    {dish.description}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+
+                            {/* Mobile Action Buttons */}
+                            <div className="flex border-t border-outline-variant/15 pt-2 space-x-2">
+                              <button
+                                onClick={() => handleEditClick(dish)}
+                                className="flex-1 bg-surface-container hover:bg-primary/10 text-on-surface hover:text-primary font-bold text-xs py-2 rounded-sm transition-colors flex items-center justify-center space-x-1"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                                <span>Editar</span>
+                              </button>
+                              <button
+                                onClick={() => handleDeleteClick(dish.id)}
+                                className="bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs px-3 py-2 rounded-sm transition-colors flex items-center justify-center space-x-1"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                                <span>Eliminar</span>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Desktop Table View (Hidden on Mobile) */}
+                      <div className="hidden md:block bg-white border border-outline-variant/20 rounded-sm overflow-x-auto shadow-xs">
+                        <table className="w-full text-left border-collapse min-w-[700px]">
+                          <thead>
+                            <tr className="border-b border-outline-variant/20 text-xs font-bold uppercase tracking-widest text-primary bg-surface-container-low">
+                              <th className="p-4 pl-6 w-24">Imagen</th>
+                              <th className="p-4">Nombre / Categoría</th>
+                              <th className="p-4">Descripción</th>
+                              <th className="p-4 w-28">Precio</th>
+                              <th className="p-4 pr-6 text-right w-32">Acciones</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                          </thead>
+                          <tbody className="text-sm text-on-surface-variant divide-y divide-outline-variant/15">
+                            {filteredDishes.map((dish) => (
+                              <tr key={dish.id} className="hover:bg-primary/5 transition-colors">
+                                <td className="p-4 pl-6">
+                                  {dish.image ? (
+                                    <img
+                                      src={dish.image}
+                                      alt={dish.name}
+                                      className="w-16 h-12 object-cover rounded-sm border border-outline-variant/20 shadow-xs animate-fade-in"
+                                    />
+                                  ) : (
+                                    <div className="w-16 h-12 bg-background flex items-center justify-center rounded-sm border border-outline-variant/20 text-[10px] font-bold text-on-surface-variant/40 select-none">
+                                      {dish.name.charAt(0)}
+                                    </div>
+                                  )}
+                                </td>
+                                <td className="p-4">
+                                  <div className="font-bold text-on-surface">{dish.name}</div>
+                                  <div className="text-[10px] text-primary uppercase font-mono tracking-wider mt-0.5">
+                                    {CATEGORIES.find((c) => c.id === dish.category)?.name || dish.category}
+                                  </div>
+                                </td>
+                                <td className="p-4 text-xs text-on-surface-variant/80 max-w-xs truncate">
+                                  {dish.description}
+                                </td>
+                                <td className="p-4 font-mono font-bold text-on-surface">
+                                  {dish.price} AED
+                                </td>
+                                <td className="p-4 pr-6 text-right space-x-3">
+                                  <button
+                                    onClick={() => handleEditClick(dish)}
+                                    className="inline-flex items-center text-on-surface-variant hover:text-primary transition-colors text-xs font-bold"
+                                    title="Editar plato"
+                                  >
+                                    <Edit2 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteClick(dish.id)}
+                                    className="inline-flex items-center text-primary hover:text-red-600 transition-colors text-xs font-bold"
+                                    title="Eliminar plato"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </>
                   )}
                 </>
               ) : (
@@ -1178,81 +1380,127 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
               {editingPromo === null ? (
                 // LIST VIEW
                 <>
-                  <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
-                    <h3 className="font-serif text-2xl font-bold text-on-surface">Promociones Activas</h3>
+                  <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
+                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-on-surface">Promociones Activas</h3>
                     
-                    <div className="flex gap-3">
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
                       <button
                         onClick={handleResetPromotionsClick}
-                        className="inline-flex items-center space-x-2 border border-outline-variant/40 bg-[#ffffff] text-on-surface-variant font-bold text-xs uppercase px-4 py-3 tracking-wider hover:bg-[#faf6f6] transition-colors rounded-sm"
+                        className="flex-1 sm:flex-none inline-flex items-center justify-center space-x-1.5 border border-outline-variant/40 bg-[#ffffff] text-on-surface-variant font-bold text-xs uppercase px-3.5 py-2.5 tracking-wider hover:bg-[#faf6f6] transition-colors rounded-sm"
                       >
-                        <RotateCcw className="w-4 h-4" />
-                        <span>Restablecer Promos</span>
+                        <RotateCcw className="w-3.5 h-3.5" />
+                        <span>Restablecer</span>
                       </button>
                       <button
                         onClick={handleAddNewPromoClick}
-                        className="inline-flex items-center space-x-2 bg-primary text-background font-bold text-xs uppercase px-5 py-3 tracking-wider hover:bg-primary-container transition-colors rounded-sm shadow-md"
+                        className="flex-1 sm:flex-none inline-flex items-center justify-center space-x-1.5 bg-primary text-background font-bold text-xs uppercase px-4 py-2.5 tracking-wider hover:bg-primary-container transition-colors rounded-sm shadow-md"
                       >
                         <Plus className="w-4 h-4" />
-                        <span>Nueva Promoción</span>
+                        <span>Nueva Promo</span>
                       </button>
                     </div>
                   </div>
 
                   {promotions.length === 0 ? (
-                    <div className="text-center py-16 bg-white border border-outline-variant/10 rounded-sm">
+                    <div className="text-center py-12 bg-white border border-outline-variant/10 rounded-sm p-4">
                       <p className="text-sm text-on-surface-variant">No hay promociones configuradas.</p>
                     </div>
                   ) : (
-                    <div className="bg-white border border-outline-variant/20 rounded-sm overflow-x-auto shadow-xs">
-                      <table className="w-full text-left border-collapse min-w-[600px]">
-                        <thead>
-                          <tr className="border-b border-outline-variant/20 text-xs font-bold uppercase tracking-widest text-primary bg-surface-container-low">
-                            <th className="p-4 pl-6 w-32">Imagen</th>
-                            <th className="p-4">Texto de la Promoción</th>
-                            <th className="p-4 pr-6 text-right w-32">Acciones</th>
-                          </tr>
-                        </thead>
-                        <tbody className="text-sm text-on-surface-variant divide-y divide-outline-variant/15">
-                          {promotions.map((promo, idx) => (
-                            <tr key={promo.id || idx} className="hover:bg-primary/5 transition-colors">
-                              <td className="p-4 pl-6">
-                                {promo.image ? (
-                                  <img
-                                    src={promo.image}
-                                    alt="Promoción"
-                                    className="w-24 h-16 object-cover rounded-sm border border-outline-variant/20 shadow-xs"
-                                  />
-                                ) : (
-                                  <div className="w-24 h-16 bg-background flex items-center justify-center rounded-sm border border-outline-variant/20 text-[9px] font-bold uppercase text-on-surface-variant/50 select-none">
-                                    Sin foto
-                                  </div>
-                                )}
-                              </td>
-                              <td className="p-4 font-bold text-on-surface text-sm leading-relaxed max-w-md">
-                                {promo.text}
-                              </td>
-                              <td className="p-4 pr-6 text-right space-x-3">
-                                <button
-                                  onClick={() => handleEditPromoClick(promo)}
-                                  className="inline-flex items-center text-on-surface-variant hover:text-primary transition-colors text-xs font-bold"
-                                  title="Editar promoción"
-                                >
-                                  <Edit2 className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={() => handleDeletePromoClick(promo.id)}
-                                  className="inline-flex items-center text-primary hover:text-red-600 transition-colors text-xs font-bold"
-                                  title="Eliminar promoción"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </td>
+                    <>
+                      {/* Mobile Cards View for Promos */}
+                      <div className="block md:hidden space-y-3">
+                        {promotions.map((promo, idx) => (
+                          <div key={promo.id || idx} className="bg-white border border-outline-variant/20 p-3.5 rounded-sm shadow-xs space-y-3">
+                            <div className="flex space-x-3 items-start">
+                              {promo.image ? (
+                                <img
+                                  src={promo.image}
+                                  alt="Promoción"
+                                  className="w-20 h-14 object-cover rounded-sm border border-outline-variant/20 shrink-0"
+                                />
+                              ) : (
+                                <div className="w-20 h-14 bg-surface-container flex items-center justify-center rounded-sm border border-outline-variant/20 text-[9px] font-bold uppercase text-on-surface-variant/50 select-none shrink-0">
+                                  Sin foto
+                                </div>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <p className="font-bold text-on-surface text-xs leading-relaxed line-clamp-3">
+                                  {promo.text}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex border-t border-outline-variant/15 pt-2 space-x-2">
+                              <button
+                                onClick={() => handleEditPromoClick(promo)}
+                                className="flex-1 bg-surface-container hover:bg-primary/10 text-on-surface hover:text-primary font-bold text-xs py-2 rounded-sm transition-colors flex items-center justify-center space-x-1"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                                <span>Editar</span>
+                              </button>
+                              <button
+                                onClick={() => handleDeletePromoClick(promo.id)}
+                                className="bg-red-50 hover:bg-red-100 text-red-600 font-bold text-xs px-3 py-2 rounded-sm transition-colors flex items-center justify-center space-x-1"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                                <span>Eliminar</span>
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Desktop Table View */}
+                      <div className="hidden md:block bg-white border border-outline-variant/20 rounded-sm overflow-x-auto shadow-xs">
+                        <table className="w-full text-left border-collapse min-w-[600px]">
+                          <thead>
+                            <tr className="border-b border-outline-variant/20 text-xs font-bold uppercase tracking-widest text-primary bg-surface-container-low">
+                              <th className="p-4 pl-6 w-32">Imagen</th>
+                              <th className="p-4">Texto de la Promoción</th>
+                              <th className="p-4 pr-6 text-right w-32">Acciones</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                          </thead>
+                          <tbody className="text-sm text-on-surface-variant divide-y divide-outline-variant/15">
+                            {promotions.map((promo, idx) => (
+                              <tr key={promo.id || idx} className="hover:bg-primary/5 transition-colors">
+                                <td className="p-4 pl-6">
+                                  {promo.image ? (
+                                    <img
+                                      src={promo.image}
+                                      alt="Promoción"
+                                      className="w-24 h-16 object-cover rounded-sm border border-outline-variant/20 shadow-xs"
+                                    />
+                                  ) : (
+                                    <div className="w-24 h-16 bg-background flex items-center justify-center rounded-sm border border-outline-variant/20 text-[9px] font-bold uppercase text-on-surface-variant/50 select-none">
+                                      Sin foto
+                                    </div>
+                                  )}
+                                </td>
+                                <td className="p-4 font-bold text-on-surface text-sm leading-relaxed max-w-md">
+                                  {promo.text}
+                                </td>
+                                <td className="p-4 pr-6 text-right space-x-3">
+                                  <button
+                                    onClick={() => handleEditPromoClick(promo)}
+                                    className="inline-flex items-center text-on-surface-variant hover:text-primary transition-colors text-xs font-bold"
+                                    title="Editar promoción"
+                                  >
+                                    <Edit2 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeletePromoClick(promo.id)}
+                                    className="inline-flex items-center text-primary hover:text-red-600 transition-colors text-xs font-bold"
+                                    title="Eliminar promoción"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </>
                   )}
                 </>
               ) : (
@@ -1921,6 +2169,59 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
 
         </div>
       </main>
+
+      {/* Mobile Fixed Bottom Navigation Bar */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-outline-variant/30 flex justify-around items-center py-2 px-1 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
+        <button
+          onClick={() => { setTab("dashboard"); setEditingDish(null); setEditingPromo(null); }}
+          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-sm transition-all ${
+            tab === "dashboard" ? "text-primary font-bold" : "text-on-surface-variant/60 hover:text-primary"
+          }`}
+        >
+          <LayoutDashboard className="w-4 h-4" />
+          <span className="text-[9px] uppercase tracking-tighter mt-1 font-semibold">Resumen</span>
+        </button>
+
+        <button
+          onClick={() => { setTab("dishes"); setEditingDish(null); setEditingPromo(null); }}
+          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-sm transition-all ${
+            tab === "dishes" ? "text-primary font-bold" : "text-on-surface-variant/60 hover:text-primary"
+          }`}
+        >
+          <ClipboardList className="w-4 h-4" />
+          <span className="text-[9px] uppercase tracking-tighter mt-1 font-semibold">Carta</span>
+        </button>
+
+        <button
+          onClick={() => { setTab("promotions"); setEditingDish(null); setEditingPromo(null); }}
+          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-sm transition-all ${
+            tab === "promotions" ? "text-primary font-bold" : "text-on-surface-variant/60 hover:text-primary"
+          }`}
+        >
+          <ImageIcon className="w-4 h-4" />
+          <span className="text-[9px] uppercase tracking-tighter mt-1 font-semibold">Promos</span>
+        </button>
+
+        <button
+          onClick={() => { setTab("orders"); setEditingDish(null); setEditingPromo(null); }}
+          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-sm transition-all ${
+            tab === "orders" ? "text-primary font-bold" : "text-on-surface-variant/60 hover:text-primary"
+          }`}
+        >
+          <Package className="w-4 h-4" />
+          <span className="text-[9px] uppercase tracking-tighter mt-1 font-semibold">Pedidos</span>
+        </button>
+
+        <button
+          onClick={() => { setTab("contact"); setEditingDish(null); setEditingPromo(null); }}
+          className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-sm transition-all ${
+            tab === "contact" ? "text-primary font-bold" : "text-on-surface-variant/60 hover:text-primary"
+          }`}
+        >
+          <Settings className="w-4 h-4" />
+          <span className="text-[9px] uppercase tracking-tighter mt-1 font-semibold">Ajustes</span>
+        </button>
+      </nav>
 
     </div>
   );
