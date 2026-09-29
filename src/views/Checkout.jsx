@@ -252,6 +252,8 @@ export default function Checkout({
                 stamps={loyaltyCard.stamps}
                 cyclesCompleted={loyaltyCard.cyclesCompleted}
                 rewardReady={loyaltyCard.rewardReady}
+                customerName={formData.name || session?.name || "Cliente VIP"}
+                phone={formData.phone || session?.phone || ""}
               />
             </div>
           )}
@@ -445,14 +447,28 @@ export default function Checkout({
 
         {/* ── RIGHT: Order Summary ── */}
         <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-4">
-          {/* Loyalty card full view */}
-          {loyaltyCard && (
+          
+          {/* 3D Loyalty Card Presentation */}
+          <div className="space-y-1">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 flex items-center space-x-1">
+                <Gift className="w-3.5 h-3.5" />
+                <span>Tarjeta de Fidelidad 3D (Cuño con Logo)</span>
+              </span>
+              <span className="text-[9px] text-on-surface-variant/70 font-mono">
+                {loyaltyCard ? `${loyaltyCard.stamps}/10 sellos` : "Nuevo Cliente"}
+              </span>
+            </div>
+            
             <LoyaltyCard
-              stamps={loyaltyCard.stamps}
-              cyclesCompleted={loyaltyCard.cyclesCompleted}
-              rewardReady={loyaltyCard.rewardReady}
+              stamps={loyaltyCard?.stamps ?? 0}
+              cyclesCompleted={loyaltyCard?.cyclesCompleted ?? 0}
+              rewardReady={loyaltyCard?.rewardReady ?? false}
+              customerName={formData.name || session?.name || "Cliente Tierra Querida"}
+              phone={formData.phone || session?.phone || ""}
+              interactive={true}
             />
-          )}
+          </div>
 
           <div className="bg-surface-container-low border border-outline-variant/15 p-8 rounded-sm space-y-8 shadow-sm">
             <h3 className="font-serif text-2xl font-bold text-primary border-b border-outline-variant/20 pb-4">

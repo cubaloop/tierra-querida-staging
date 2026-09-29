@@ -10,6 +10,7 @@ import Menu from "./views/Menu";
 import Checkout from "./views/Checkout";
 import Auth from "./views/Auth";
 import AdminPanel from "./views/AdminPanel";
+import Profile from "./views/Profile";
 
 // DB utilities
 import {
@@ -243,6 +244,15 @@ export default function App() {
           <Auth
             setView={setView}
             onLoginSuccess={handleLoginSuccess}
+          />
+        )}
+
+        {view === "profile" && (
+          <Profile
+            session={session}
+            onUpdateSession={(updated) => setSession(updated)}
+            setView={setView}
+            onLogout={handleLogout}
           />
         )}
 

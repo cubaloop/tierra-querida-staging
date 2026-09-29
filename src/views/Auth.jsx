@@ -40,7 +40,7 @@ export default function Auth({ setView, onLoginSuccess }) {
           if (user.role === "admin") {
             setView("admin");
           } else {
-            setView("menu");
+            setView("profile");
           }
         }, 1000);
       } else {

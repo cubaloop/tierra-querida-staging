@@ -1,6 +1,7 @@
 import { INITIAL_DISHES, INITIAL_PROMOTIONS, RESTAURANT_INFO } from "../data/initialData";
 import { supabase, isSupabaseConfigured } from "./supabase";
 import { DEFAULT_DELIVERY_RATES, DEFAULT_MAX_DELIVERY_KM, DEFAULT_FREE_DELIVERY_MIN } from "./delivery";
+import { getLoyaltyCard, upsertLoyaltyCard } from "./loyalty";
 
 const DISHES_KEY = "tierra_querida_dishes";
 const USERS_KEY = "tierra_querida_users";
@@ -497,6 +498,52 @@ export const updateCurrentSessionAddress = (address, phone) => {
       write(USERS_KEY, users);
     }
   }
+};
+
+export const updateUserProfile = async ({ name, phone, address, email, password }) => {
+  const session = getCurrentSession();
+  if (!session) throw new Error("No hay una sesión activa.");
+
+  const users = getUsers();
+  const index = users.findIndex(
+    u => u.email.toLowerCase().trim() === session.email.toLowerCase().trim()
+  );
+
+  if (index === -1) throw new Error("Usuario no encontrado en la base de datos.");
+
+  // If changing email, check that it doesn't collide with another user
+  if (email && email.toLowerCase().trim() !== session.email.toLowerCase().trim()) {
+    const emailExists = users.some(
+      (u, idx) => idx !== index && u.email.toLowerCase().trim() === email.toLowerCase().trim()
+    );
+    if (emailExists) throw new Error("El correo electrónico ya está registrado por otro usuario.");
+    users[index].email = email.toLowerCase().trim();
+  }
+
+  if (name) users[index].name = name.trim();
+  if (phone) users[index].phone = phone.trim();
+  if (address) users[index].address = address.trim();
+  if (password && password.trim()) users[index].password = password.trim();
+
+  write(USERS_KEY, users);
+
+  const updatedSession = { ...users[index] };
+  write(SESSION_KEY, updatedSession);
+
+  // Sync with loyalty card name if phone exists
+  if (phone) {
+    try {
+      const card = await getLoyaltyCard(phone.trim());
+      if (card) {
+        card.customerName = name ? name.trim() : card.customerName;
+        await upsertLoyaltyCard(card);
+      }
+    } catch (e) {
+      console.warn("Could not sync loyalty card name:", e);
+    }
+  }
+
+  return updatedSession;
 };
 
 // Orders
