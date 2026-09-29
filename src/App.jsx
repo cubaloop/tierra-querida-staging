@@ -22,7 +22,8 @@ import {
   isSiteLocked,
   setSiteLocked,
   getRestaurantInfo,
-  syncFromSupabase
+  syncFromSupabase,
+  getDeliveryRates
 } from "./utils/db";
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
   const [selectedDish, setSelectedDish] = useState(null);
   const [locked, setLocked] = useState(false);
   const [restaurantInfo, setRestaurantInfo] = useState({});
+  const [deliveryRates, setDeliveryRates] = useState(null);
 
   // Initialize DB and load session/dishes on mount
   useEffect(() => {
@@ -44,6 +46,7 @@ export default function App() {
     setPromotions(getPromotions());
     setSession(getCurrentSession());
     setRestaurantInfo(getRestaurantInfo());
+    setDeliveryRates(getDeliveryRates());
 
     // Background cloud sync
     syncFromSupabase().then((synced) => {
@@ -232,6 +235,7 @@ export default function App() {
             session={session}
             onUpdateSessionAddress={handleUpdateSessionAddress}
             restaurantInfo={restaurantInfo}
+            deliveryRates={deliveryRates}
           />
         )}
 

@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Plus, Edit2, Trash2, RotateCcw, Package, ClipboardList, CheckCircle, Clock, Image as ImageIcon, LayoutDashboard, LogOut, Download, DollarSign, ArrowLeft, Settings, Menu as MenuIcon, X as CloseIcon, Eye } from "lucide-react";
-import { saveDish, deleteDish, resetDishes, getOrders, savePromotion, deletePromotion, resetPromotions, logoutUser, saveRestaurantInfo, resetRestaurantInfo, uploadRestaurantImage } from "../utils/db";
+﻿import React, { useState, useEffect, useMemo } from "react";
+import { Plus, Edit2, Trash2, RotateCcw, Package, ClipboardList, CheckCircle, Clock, Image as ImageIcon, LayoutDashboard, LogOut, Download, DollarSign, ArrowLeft, Settings, Menu as MenuIcon, X as CloseIcon, Eye, Star, MapPin, Loader2, Gift } from "lucide-react";
+import { saveDish, deleteDish, resetDishes, getOrders, savePromotion, deletePromotion, resetPromotions, logoutUser, saveRestaurantInfo, resetRestaurantInfo, uploadRestaurantImage, getDeliveryRates, saveDeliveryRates } from "../utils/db";
+import { getAllLoyaltyCards, adminUpdateLoyaltyCard, upsertLoyaltyCard } from "../utils/loyalty";
+import { DEFAULT_DELIVERY_RATES } from "../utils/delivery";
 import { CATEGORIES } from "../data/initialData";
 
 const PROMO_IMAGE_BANK = [
@@ -75,9 +77,20 @@ export default function AdminPanel({
   restaurantInfo,
   onRefreshInfo
 }) {
-  const [tab, setTab] = useState("dashboard"); // 'dashboard', 'dishes', 'orders', 'promotions', 'contact'
+  const [tab, setTab] = useState("dashboard"); // 'dashboard', 'dishes', 'orders', 'promotions', 'contact', 'loyalty'
   const [editingDish, setEditingDish] = useState(null); // null means list view, object means edit form, empty object means create form
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Loyalty cards state
+  const [loyaltyCards, setLoyaltyCards] = useState([]);
+  const [loyaltyLoading, setLoyaltyLoading] = useState(false);
+  const [loyaltySearch, setLoyaltySearch] = useState("");
+  const [editingLoyalty, setEditingLoyalty] = useState(null); // card being edited
+  const [loyaltySaveMsg, setLoyaltySaveMsg] = useState("");
+
+  // Delivery rates state
+  const [deliveryRatesForm, setDeliveryRatesForm] = useState(getDeliveryRates());
+  const [deliverySaveMsg, setDeliverySaveMsg] = useState("");
 
   // Contact Info state
   const [infoForm, setInfoForm] = useState({
@@ -184,6 +197,77 @@ export default function AdminPanel({
       setInfoForm(reset);
       if (onRefreshInfo) onRefreshInfo();
     }
+  };
+
+  // ─── Loyalty card handlers ───────────────────────────────────
+  const loadLoyaltyCards = async () => {
+    setLoyaltyLoading(true);
+    try {
+      const cards = await getAllLoyaltyCards();
+      setLoyaltyCards(cards);
+    } catch (e) {
+      console.error("Error loading loyalty cards:", e);
+    } finally {
+      setLoyaltyLoading(false);
+    }
+  };
+
+  const handleLoyaltySave = async (phone, stamps, cycles, rewardReady) => {
+    try {
+      await adminUpdateLoyaltyCard(phone, stamps, cycles, rewardReady);
+      setLoyaltySaveMsg("✓ Guardado");
+      setTimeout(() => setLoyaltySaveMsg(""), 2000);
+      await loadLoyaltyCards();
+      setEditingLoyalty(null);
+    } catch (e) {
+      console.error("Error saving loyalty card:", e);
+    }
+  };
+
+  const handleDeleteLoyaltyCard = async (phone) => {
+    if (!window.confirm(`¿Eliminar la tarjeta de ${phone}? Esta acción no se puede deshacer.`)) return;
+    try {
+      const { supabase, isSupabaseConfigured } = await import("../utils/supabase");
+      if (isSupabaseConfigured) {
+        await supabase.from("loyalty_cards").delete().eq("phone", phone);
+      }
+      setLoyaltyCards((prev) => prev.filter((c) => c.phone !== phone));
+    } catch (e) {
+      console.error("Error deleting loyalty card:", e);
+    }
+  };
+
+  // ─── Delivery rates handlers ──────────────────────────────────
+  const handleDeliveryRateSave = async () => {
+    try {
+      await saveDeliveryRates(deliveryRatesForm);
+      setDeliverySaveMsg("✓ Tarifas guardadas");
+      setTimeout(() => setDeliverySaveMsg(""), 2500);
+    } catch (e) {
+      console.error("Error saving delivery rates:", e);
+    }
+  };
+
+  const handleDeliveryRateChange = (index, field, value) => {
+    setDeliveryRatesForm((prev) => {
+      const newRates = [...prev.rates];
+      newRates[index] = { ...newRates[index], [field]: Number(value) };
+      return { ...prev, rates: newRates };
+    });
+  };
+
+  const handleAddDeliveryTier = () => {
+    setDeliveryRatesForm((prev) => ({
+      ...prev,
+      rates: [...prev.rates, { minKm: prev.rates.at(-1)?.maxKm ?? 20, maxKm: prev.rates.at(-1)?.maxKm + 10 ?? 30, fee: 30 }]
+    }));
+  };
+
+  const handleRemoveDeliveryTier = (index) => {
+    setDeliveryRatesForm((prev) => ({
+      ...prev,
+      rates: prev.rates.filter((_, i) => i !== index)
+    }));
   };
 
   const handleExportMenu = () => {
@@ -629,6 +713,18 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
               <Settings className="w-4 h-4" />
               <span>Datos & Configuración</span>
             </button>
+
+            <button
+              onClick={() => { setTab("loyalty"); setEditingDish(null); setEditingPromo(null); setMobileMenuOpen(false); loadLoyaltyCards(); }}
+              className={`w-full flex items-center space-x-3 px-4 py-3.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-all ${
+                tab === "loyalty"
+                  ? "bg-amber-400 text-white shadow-xs font-bold"
+                  : "text-amber-700 hover:bg-amber-50 hover:text-amber-800"
+              }`}
+            >
+              <Gift className="w-4 h-4" />
+              <span>Fidelizaci&#xF3;n &#x1F3AF;</span>
+            </button>
           </nav>
         </div>
 
@@ -734,6 +830,18 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
               <Settings className="w-4 h-4" />
               <span>Datos de Contacto</span>
             </button>
+
+            <button
+              onClick={() => { setTab("loyalty"); setEditingDish(null); setEditingPromo(null); loadLoyaltyCards(); }}
+              className={`w-full flex items-center space-x-3 px-4 py-3 text-xs font-bold uppercase tracking-wider rounded-sm transition-all ${
+                tab === "loyalty"
+                  ? "bg-amber-400 text-white shadow-xs font-bold"
+                  : "text-amber-700 hover:bg-amber-50 hover:text-amber-800"
+              }`}
+            >
+              <Gift className="w-4 h-4" />
+              <span>Fidelizaci&#xF3;n &#x1F3AF;</span>
+            </button>
           </nav>
         </div>
 
@@ -792,6 +900,7 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
               {tab === "promotions" && "Anuncios y Promos"}
               {tab === "orders" && "Historial de Pedidos"}
               {tab === "contact" && "Configuración y Contacto"}
+              {tab === "loyalty" && "🎯 Fidelización de Clientes"}
             </h2>
           </div>
           
@@ -2166,6 +2275,211 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
               </form>
             </div>
           )}
+
+          {/* ── LOYALTY TAB ── */}
+          {tab === "loyalty" && (
+            <div className="space-y-8 animate-fade-in">
+
+              {/* ── Delivery Rates Section ── */}
+              <div className="bg-white border border-outline-variant/20 p-6 rounded-sm shadow-sm space-y-5">
+                <div className="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+                  <div className="flex items-center space-x-2">
+                    <MapPin className="w-4 h-4 text-primary" />
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-on-surface">Tarifas de Delivery por Distancia</h3>
+                  </div>
+                  {deliverySaveMsg && <span className="text-[10px] text-emerald-600 font-bold">{deliverySaveMsg}</span>}
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-[10px] font-bold uppercase text-on-surface-variant">Radio Máx. de Delivery (km)</label>
+                    <input type="number" min="1" max="100"
+                      value={deliveryRatesForm.maxKm}
+                      onChange={(e) => setDeliveryRatesForm(prev => ({ ...prev, maxKm: Number(e.target.value) }))}
+                      className="bg-surface-container border border-outline-variant/30 text-on-surface px-3 py-2 text-sm rounded-sm outline-none focus:border-primary" />
+                  </div>
+                  <div className="flex flex-col space-y-1">
+                    <label className="text-[10px] font-bold uppercase text-on-surface-variant">Mínimo para Envío Gratis (AED, 0 = desactivado)</label>
+                    <input type="number" min="0"
+                      value={deliveryRatesForm.freeDeliveryMin}
+                      onChange={(e) => setDeliveryRatesForm(prev => ({ ...prev, freeDeliveryMin: Number(e.target.value) }))}
+                      className="bg-surface-container border border-outline-variant/30 text-on-surface px-3 py-2 text-sm rounded-sm outline-none focus:border-primary" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-[10px] font-bold uppercase text-on-surface-variant">Tramos de Tarifa</p>
+                  {deliveryRatesForm.rates.map((tier, i) => (
+                    <div key={i} className="flex items-center space-x-2 bg-surface-container p-3 rounded-sm border border-outline-variant/15">
+                      <div className="flex-1 grid grid-cols-3 gap-2">
+                        <div>
+                          <label className="text-[9px] uppercase text-on-surface-variant/60">Desde (km)</label>
+                          <input type="number" min="0" value={tier.minKm}
+                            onChange={(e) => handleDeliveryRateChange(i, "minKm", e.target.value)}
+                            className="w-full bg-white border border-outline-variant/30 px-2 py-1.5 text-xs rounded-sm outline-none" />
+                        </div>
+                        <div>
+                          <label className="text-[9px] uppercase text-on-surface-variant/60">Hasta (km)</label>
+                          <input type="number" min="0" value={tier.maxKm}
+                            onChange={(e) => handleDeliveryRateChange(i, "maxKm", e.target.value)}
+                            className="w-full bg-white border border-outline-variant/30 px-2 py-1.5 text-xs rounded-sm outline-none" />
+                        </div>
+                        <div>
+                          <label className="text-[9px] uppercase text-on-surface-variant/60">Tarifa (AED)</label>
+                          <input type="number" min="0" value={tier.fee}
+                            onChange={(e) => handleDeliveryRateChange(i, "fee", e.target.value)}
+                            className="w-full bg-white border border-outline-variant/30 px-2 py-1.5 text-xs rounded-sm outline-none" />
+                        </div>
+                      </div>
+                      <button onClick={() => handleRemoveDeliveryTier(i)}
+                        className="text-red-500 hover:text-red-700 p-1" title="Eliminar tramo">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                  <button onClick={handleAddDeliveryTier}
+                    className="w-full border border-dashed border-outline-variant text-on-surface-variant text-xs py-2 rounded-sm hover:bg-surface-container transition-colors">
+                    + Agregar Tramo
+                  </button>
+                </div>
+
+                <button onClick={handleDeliveryRateSave}
+                  className="w-full bg-primary text-background font-bold text-xs uppercase py-3 tracking-widest hover:bg-primary-container transition-colors rounded-sm">
+                  Guardar Tarifas de Delivery
+                </button>
+              </div>
+
+              {/* ── Loyalty Cards Section ── */}
+              <div className="bg-white border border-outline-variant/20 p-6 rounded-sm shadow-sm space-y-5">
+                <div className="flex items-center justify-between border-b border-outline-variant/20 pb-3 flex-wrap gap-2">
+                  <div className="flex items-center space-x-2">
+                    <Gift className="w-4 h-4 text-amber-500" />
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-on-surface">Tarjetas de Fidelización ({loyaltyCards.length})</h3>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    {loyaltySaveMsg && <span className="text-[10px] text-emerald-600 font-bold">{loyaltySaveMsg}</span>}
+                    <button onClick={loadLoyaltyCards}
+                      disabled={loyaltyLoading}
+                      className="flex items-center space-x-1 text-[10px] font-bold bg-primary/10 border border-primary/20 text-primary px-3 py-1.5 rounded-sm hover:bg-primary/20 transition-colors">
+                      {loyaltyLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <RotateCcw className="w-3 h-3" />}
+                      <span>Recargar</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Search */}
+                <input
+                  type="text"
+                  placeholder="Buscar por nombre o teléfono..."
+                  value={loyaltySearch}
+                  onChange={(e) => setLoyaltySearch(e.target.value)}
+                  className="w-full bg-surface-container border border-outline-variant/30 px-4 py-2.5 text-sm rounded-sm outline-none focus:border-primary"
+                />
+
+                {loyaltyLoading && (
+                  <div className="flex justify-center py-8">
+                    <Loader2 className="w-6 h-6 animate-spin text-primary" />
+                  </div>
+                )}
+
+                {!loyaltyLoading && loyaltyCards.length === 0 && (
+                  <div className="text-center py-10 text-on-surface-variant/60">
+                    <Star className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                    <p className="text-sm">Todavía no hay clientes con tarjeta de fidelización.</p>
+                    <p className="text-xs mt-1 opacity-70">Se crean automáticamente cuando un cliente completa su primer pedido.</p>
+                  </div>
+                )}
+
+                {!loyaltyLoading && loyaltyCards
+                  .filter(c => !loyaltySearch ||
+                    c.phone.includes(loyaltySearch) ||
+                    c.customerName.toLowerCase().includes(loyaltySearch.toLowerCase()))
+                  .map(card => (
+                    <div key={card.phone} className="border border-outline-variant/20 rounded-sm p-4 space-y-3 bg-surface-container-low">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <p className="font-bold text-sm text-on-surface">{card.customerName || "Sin nombre"}</p>
+                          <p className="text-xs text-on-surface-variant">{card.phone}</p>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          {card.rewardReady && (
+                            <span className="text-[9px] font-bold bg-amber-400 text-white px-2 py-0.5 rounded-full uppercase">🎁 Premio Listo</span>
+                          )}
+                          <span className="text-[10px] bg-surface-container px-2 py-0.5 rounded-sm border border-outline-variant/20 font-mono">{card.stamps}/10</span>
+                          <span className="text-[9px] text-on-surface-variant/60">{card.cyclesCompleted} ciclo(s)</span>
+                        </div>
+                      </div>
+
+                      {/* Stamp dots */}
+                      <div className="flex space-x-1.5">
+                        {Array.from({length: 10}).map((_, i) => (
+                          <div key={i} className={`w-5 h-5 rounded-full border-2 flex items-center justify-center text-[9px] ${i < card.stamps ? "bg-amber-400 border-amber-500 text-white" : "bg-white border-amber-200 text-amber-200"}`}>
+                            {i < card.stamps ? "✓" : i+1}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Edit row */}
+                      {editingLoyalty === card.phone ? (
+                        <div className="pt-2 border-t border-outline-variant/20 space-y-3">
+                          <div className="grid grid-cols-3 gap-3">
+                            <div>
+                              <label className="text-[9px] uppercase font-bold text-on-surface-variant">Sellos (0-9)</label>
+                              <input type="number" min="0" max="9"
+                                defaultValue={card.stamps}
+                                id={`stamps-${card.phone}`}
+                                className="w-full border border-outline-variant/30 bg-white px-2 py-1.5 text-xs rounded-sm outline-none" />
+                            </div>
+                            <div>
+                              <label className="text-[9px] uppercase font-bold text-on-surface-variant">Ciclos</label>
+                              <input type="number" min="0"
+                                defaultValue={card.cyclesCompleted}
+                                id={`cycles-${card.phone}`}
+                                className="w-full border border-outline-variant/30 bg-white px-2 py-1.5 text-xs rounded-sm outline-none" />
+                            </div>
+                            <div className="flex flex-col justify-end">
+                              <label className="text-[9px] uppercase font-bold text-on-surface-variant">Premio Listo</label>
+                              <input type="checkbox"
+                                defaultChecked={card.rewardReady}
+                                id={`reward-${card.phone}`}
+                                className="w-5 h-5 mt-1" />
+                            </div>
+                          </div>
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => handleLoyaltySave(
+                                card.phone,
+                                document.getElementById(`stamps-${card.phone}`).value,
+                                document.getElementById(`cycles-${card.phone}`).value,
+                                document.getElementById(`reward-${card.phone}`).checked
+                              )}
+                              className="flex-1 bg-primary text-background text-xs font-bold py-2 rounded-sm uppercase tracking-wider">
+                              Guardar
+                            </button>
+                            <button onClick={() => setEditingLoyalty(null)}
+                              className="px-4 bg-surface-container text-on-surface-variant text-xs font-bold py-2 rounded-sm border border-outline-variant">
+                              Cancelar
+                            </button>
+                            <button onClick={() => handleDeleteLoyaltyCard(card.phone)}
+                              className="px-3 bg-red-50 text-red-600 text-xs font-bold py-2 rounded-sm border border-red-200">
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button onClick={() => setEditingLoyalty(card.phone)}
+                          className="text-[10px] font-bold text-primary hover:underline flex items-center space-x-1">
+                          <Edit2 className="w-3 h-3" />
+                          <span>Editar sellos</span>
+                        </button>
+                      )}
+                    </div>
+                  ))}
+              </div>
+
+            </div>
+          )}
+
 
         </div>
       </main>

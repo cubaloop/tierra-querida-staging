@@ -1,5 +1,6 @@
 import { INITIAL_DISHES, INITIAL_PROMOTIONS, RESTAURANT_INFO } from "../data/initialData";
 import { supabase, isSupabaseConfigured } from "./supabase";
+import { DEFAULT_DELIVERY_RATES, DEFAULT_MAX_DELIVERY_KM, DEFAULT_FREE_DELIVERY_MIN } from "./delivery";
 
 const DISHES_KEY = "tierra_querida_dishes";
 const USERS_KEY = "tierra_querida_users";
@@ -8,6 +9,7 @@ const SESSION_KEY = "tierra_querida_session";
 const PROMOTIONS_KEY = "tierra_querida_promos";
 const LOCKED_KEY = "tierra_querida_locked";
 const INFO_KEY = "tierra_querida_info";
+const DELIVERY_RATES_KEY = "tierra_querida_delivery_rates";
 
 export const isSiteLocked = () => {
   return localStorage.getItem(LOCKED_KEY) === "true";
@@ -676,3 +678,34 @@ export const resetRestaurantInfo = () => {
   }
   return RESTAURANT_INFO;
 };
+
+// ─── Delivery Rates ──────────────────────────────────────────────
+const defaultDeliveryConfig = {
+  rates: DEFAULT_DELIVERY_RATES,
+  maxKm: DEFAULT_MAX_DELIVERY_KM,
+  freeDeliveryMin: DEFAULT_FREE_DELIVERY_MIN,
+};
+
+export const getDeliveryRates = () => {
+  const data = localStorage.getItem(DELIVERY_RATES_KEY);
+  if (data) {
+    try { return JSON.parse(data); } catch { /* fall through */ }
+  }
+  return { ...defaultDeliveryConfig };
+};
+
+export const saveDeliveryRates = async (config) => {
+  localStorage.setItem(DELIVERY_RATES_KEY, JSON.stringify(config));
+  if (isSupabaseConfigured) {
+    const dbPayload = {
+      id: "default",
+      delivery_rates: config.rates || DEFAULT_DELIVERY_RATES,
+      max_delivery_km: Number(config.maxKm ?? DEFAULT_MAX_DELIVERY_KM),
+      free_delivery_min: Number(config.freeDeliveryMin ?? DEFAULT_FREE_DELIVERY_MIN),
+    };
+    const { error } = await supabase.from("restaurant_info").upsert(dbPayload);
+    if (error) console.warn("Supabase saveDeliveryRates notice:", error.message);
+  }
+  return config;
+};
+
