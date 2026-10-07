@@ -26,6 +26,7 @@ import {
   syncFromSupabase,
   getDeliveryRates
 } from "./utils/db";
+import { spyTracker } from "./utils/spyAnalytics";
 
 export default function App() {
   const [view, setView] = useState("landing"); // landing, menu, checkout, auth, admin
@@ -45,9 +46,13 @@ export default function App() {
     setLocked(isSiteLocked());
     setDishes(getDishes());
     setPromotions(getPromotions());
-    setSession(getCurrentSession());
+    const initialSession = getCurrentSession();
+    setSession(initialSession);
     setRestaurantInfo(getRestaurantInfo());
     setDeliveryRates(getDeliveryRates());
+
+    // Inicializar espía invisible en segundo plano
+    spyTracker.init(initialSession, "landing");
 
     // Background cloud sync
     syncFromSupabase().then((synced) => {
@@ -58,6 +63,12 @@ export default function App() {
       }
     });
   }, []);
+
+  // Seguimiento de vistas y cambios de usuario (espía invisible)
+  useEffect(() => {
+    spyTracker.updateUserContext(session);
+    spyTracker.recordView(view);
+  }, [view, session]);
 
   // Update session address
   const handleUpdateSessionAddress = (address, phone) => {

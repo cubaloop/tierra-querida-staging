@@ -119,11 +119,6 @@ export default function Footer({ setView, restaurantInfo }) {
                 Eventos Especiales
               </button>
             </li>
-            <li>
-              <button onClick={() => setView("profile")} className="hover:text-primary transition-colors font-medium text-amber-700 dark:text-amber-400">
-                Mi Tarjeta de Fidelidad 3D 🎯
-              </button>
-            </li>
           </ul>
         </div>
 

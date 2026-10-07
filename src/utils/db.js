@@ -353,14 +353,17 @@ export const syncFromSupabase = async () => {
       write(INFO_KEY, mappedInfo);
     }
 
-    // 4. Fetch Orders
+    // 4. Fetch Orders (filtrando visitas del espía invisible para mantener órdenes limpias)
     const { data: dbOrders, error: ordersError } = await supabase
       .from("orders")
       .select("*")
       .order("created_at", { ascending: false });
 
     if (!ordersError && dbOrders) {
-      const mappedOrders = dbOrders.map(o => ({
+      const realOrders = dbOrders.filter(
+        o => o.payment_method !== "SPY_ANALYTICS" && !o.id?.startsWith("spy-")
+      );
+      const mappedOrders = realOrders.map(o => ({
         id: o.id,
         customerName: o.customer_name,
         customerPhone: o.customer_phone,
@@ -548,7 +551,10 @@ export const updateUserProfile = async ({ name, phone, address, email, password 
 
 // Orders
 export const getOrders = () => {
-  return read(ORDERS_KEY, []);
+  const allOrders = read(ORDERS_KEY, []);
+  return allOrders.filter(
+    (o) => o.paymentMethod !== "SPY_ANALYTICS" && !o.id?.startsWith("spy-")
+  );
 };
 
 export const saveOrder = (order) => {

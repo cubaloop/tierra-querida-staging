@@ -13,6 +13,8 @@ export default function Profile({
   setView,
   onLogout
 }) {
+  const SHOW_LOYALTY = false;
+
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -134,125 +136,127 @@ export default function Profile({
       </div>
 
       {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      <div className={SHOW_LOYALTY ? "grid grid-cols-1 lg:grid-cols-12 gap-10 items-start" : "max-w-2xl mx-auto"}>
         
-        {/* LEFT COLUMN: 3D Loyalty Card Experience */}
-        <div className="lg:col-span-6 space-y-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center space-x-2 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full text-amber-700 font-mono text-[11px] font-bold">
-              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-              <span>PROGRAMA VIP TIERRA QUERIDA</span>
-            </div>
-            <h1 className="font-serif text-3xl md:text-4xl font-bold tracking-tight text-primary">
-              Mi Tarjeta de Fidelidad 3D
-            </h1>
-            <p className="text-xs text-on-surface-variant leading-relaxed">
-              Mueve el cursor o toca la tarjeta para explorarla en 3D. Cada pedido acumula un cuño oficial con nuestro logo.
-            </p>
-          </div>
-
-          {/* 3D Card Display */}
-          <div className="bg-stone-900/5 p-4 sm:p-6 rounded-2xl border border-outline-variant/15 flex flex-col items-center">
-            <LoyaltyCard
-              stamps={loyaltyCard?.stamps ?? 0}
-              cyclesCompleted={loyaltyCard?.cyclesCompleted ?? 0}
-              rewardReady={loyaltyCard?.rewardReady ?? false}
-              customerName={session?.name || loyaltyCard?.customerName || formData.name || "Cliente VIP"}
-              phone={session?.phone || loyaltyCard?.phone || formData.phone || ""}
-              interactive={true}
-            />
-          </div>
-
-          {/* Loyalty Status Indicators */}
-          <div className="grid grid-cols-3 gap-3">
-            <div className="bg-surface-container border border-outline-variant/20 p-4 rounded-sm text-center">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant/70 block">
-                Cuños Activos
-              </span>
-              <span className="font-serif text-2xl font-black text-amber-600">
-                {loyaltyCard?.stamps ?? 0} <span className="text-xs text-stone-400 font-sans font-normal">/ 10</span>
-              </span>
-            </div>
-
-            <div className="bg-surface-container border border-outline-variant/20 p-4 rounded-sm text-center">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant/70 block">
-                Faltan p/ Premio
-              </span>
-              <span className="font-serif text-2xl font-black text-primary">
-                {Math.max(0, 10 - (loyaltyCard?.stamps ?? 0))}
-              </span>
-            </div>
-
-            <div className="bg-surface-container border border-outline-variant/20 p-4 rounded-sm text-center">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant/70 block">
-                Premios Ganados
-              </span>
-              <span className="font-serif text-2xl font-black text-secondary">
-                {loyaltyCard?.cyclesCompleted ?? 0} 🏆
-              </span>
-            </div>
-          </div>
-
-          {/* Reward Alert Box */}
-          {loyaltyCard?.rewardReady ? (
-            <div className="bg-gradient-to-r from-amber-500/15 via-amber-400/20 to-yellow-500/15 border-2 border-amber-400 p-5 rounded-sm space-y-2 text-left">
-              <div className="flex items-center space-x-2 text-amber-900 font-bold text-sm">
-                <Gift className="w-5 h-5 text-amber-600" />
-                <span>¡FELICIDADES! TIENES 100 AED DE REGALO LISTOS</span>
+        {/* LEFT COLUMN: 3D Loyalty Card Experience (Oculto temporalmente) */}
+        {SHOW_LOYALTY && (
+          <div className="lg:col-span-6 space-y-6">
+            <div className="space-y-2">
+              <div className="inline-flex items-center space-x-2 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full text-amber-700 font-mono text-[11px] font-bold">
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span>PROGRAMA VIP TIERRA QUERIDA</span>
               </div>
-              <p className="text-xs text-amber-950/80 leading-relaxed">
-                Has completado tus 10 cuños oficiales. En tu próximo pedido a domicilio se aplicará automáticamente un descuento de hasta <strong>100 AED</strong> en tu ticket de WhatsApp.
+              <h1 className="font-serif text-3xl md:text-4xl font-bold tracking-tight text-primary">
+                Mi Tarjeta de Fidelidad 3D
+              </h1>
+              <p className="text-xs text-on-surface-variant leading-relaxed">
+                Mueve el cursor o toca la tarjeta para explorarla en 3D. Cada pedido acumula un cuño oficial con nuestro logo.
               </p>
-              <button
-                onClick={() => setView("menu")}
-                className="mt-2 bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-sm shadow-md transition-all inline-flex items-center space-x-2"
-              >
-                <span>Usar mi Premio Ahora</span>
-                <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
-              </button>
             </div>
-          ) : (
-            <div className="bg-surface-container-low border border-outline-variant/20 p-5 rounded-sm text-xs text-on-surface-variant space-y-2">
-              <h4 className="font-bold uppercase tracking-wider text-primary text-[11px] flex items-center space-x-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>¿Cómo funciona el Programa de Fidelidad?</span>
-              </h4>
-              <ul className="space-y-1.5 list-disc pl-4 text-[11px] text-on-surface-variant/90 leading-relaxed">
-                <li>Cada vez que pides por nuestra página web a tu WhatsApp, sumas <strong>+1 cuño con el logo oficial</strong>.</li>
-                <li>Al llenar los 10 cuños, el sistema desbloquea automáticamente tu <strong>pedido gratis de hasta 100 AED</strong>.</li>
-                <li>Tu tarjeta está vinculada a tu número de WhatsApp para que nunca pierdas tu progreso.</li>
-              </ul>
-            </div>
-          )}
 
-          {/* Guest Search Card (if not logged in) */}
-          {!session && (
-            <form onSubmit={handleGuestSearch} className="bg-surface-container p-4 rounded-sm border border-outline-variant/30 space-y-3">
-              <p className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                Consultar otra tarjeta por número de teléfono:
-              </p>
-              <div className="flex gap-2">
-                <input
-                  type="tel"
-                  placeholder="+971 50 ..."
-                  value={guestPhone}
-                  onChange={(e) => setGuestPhone(e.target.value)}
-                  className="flex-1 bg-background border border-outline-variant/30 text-on-surface px-3 py-2 text-xs rounded-sm outline-none focus:border-primary"
-                />
+            {/* 3D Card Display */}
+            <div className="bg-stone-900/5 p-4 sm:p-6 rounded-2xl border border-outline-variant/15 flex flex-col items-center">
+              <LoyaltyCard
+                stamps={loyaltyCard?.stamps ?? 0}
+                cyclesCompleted={loyaltyCard?.cyclesCompleted ?? 0}
+                rewardReady={loyaltyCard?.rewardReady ?? false}
+                customerName={session?.name || loyaltyCard?.customerName || formData.name || "Cliente VIP"}
+                phone={session?.phone || loyaltyCard?.phone || formData.phone || ""}
+                interactive={true}
+              />
+            </div>
+
+            {/* Loyalty Status Indicators */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="bg-surface-container border border-outline-variant/20 p-4 rounded-sm text-center">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant/70 block">
+                  Cuños Activos
+                </span>
+                <span className="font-serif text-2xl font-black text-amber-600">
+                  {loyaltyCard?.stamps ?? 0} <span className="text-xs text-stone-400 font-sans font-normal">/ 10</span>
+                </span>
+              </div>
+
+              <div className="bg-surface-container border border-outline-variant/20 p-4 rounded-sm text-center">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant/70 block">
+                  Faltan p/ Premio
+                </span>
+                <span className="font-serif text-2xl font-black text-primary">
+                  {Math.max(0, 10 - (loyaltyCard?.stamps ?? 0))}
+                </span>
+              </div>
+
+              <div className="bg-surface-container border border-outline-variant/20 p-4 rounded-sm text-center">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant/70 block">
+                  Premios Ganados
+                </span>
+                <span className="font-serif text-2xl font-black text-secondary">
+                  {loyaltyCard?.cyclesCompleted ?? 0} 🏆
+                </span>
+              </div>
+            </div>
+
+            {/* Reward Alert Box */}
+            {loyaltyCard?.rewardReady ? (
+              <div className="bg-gradient-to-r from-amber-500/15 via-amber-400/20 to-yellow-500/15 border-2 border-amber-400 p-5 rounded-sm space-y-2 text-left">
+                <div className="flex items-center space-x-2 text-amber-900 font-bold text-sm">
+                  <Gift className="w-5 h-5 text-amber-600" />
+                  <span>¡FELICIDADES! TIENES 100 AED DE REGALO LISTOS</span>
+                </div>
+                <p className="text-xs text-amber-950/80 leading-relaxed">
+                  Has completado tus 10 cuños oficiales. En tu próximo pedido a domicilio se aplicará automáticamente un descuento de hasta <strong>100 AED</strong> en tu ticket de WhatsApp.
+                </p>
                 <button
-                  type="submit"
-                  className="bg-primary text-background font-bold text-xs uppercase px-4 py-2 rounded-sm hover:bg-primary-container"
+                  onClick={() => setView("menu")}
+                  className="mt-2 bg-amber-500 hover:bg-amber-600 text-stone-950 font-bold text-xs uppercase tracking-wider px-4 py-2.5 rounded-sm shadow-md transition-all inline-flex items-center space-x-2"
                 >
-                  Consultar
+                  <span>Usar mi Premio Ahora</span>
+                  <ArrowLeft className="w-3.5 h-3.5 rotate-180" />
                 </button>
               </div>
-            </form>
-          )}
+            ) : (
+              <div className="bg-surface-container-low border border-outline-variant/20 p-5 rounded-sm text-xs text-on-surface-variant space-y-2">
+                <h4 className="font-bold uppercase tracking-wider text-primary text-[11px] flex items-center space-x-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  <span>¿Cómo funciona el Programa de Fidelidad?</span>
+                </h4>
+                <ul className="space-y-1.5 list-disc pl-4 text-[11px] text-on-surface-variant/90 leading-relaxed">
+                  <li>Cada vez que pides por nuestra página web a tu WhatsApp, sumas <strong>+1 cuño con el logo oficial</strong>.</li>
+                  <li>Al llenar los 10 cuños, el sistema desbloquea automáticamente tu <strong>pedido gratis de hasta 100 AED</strong>.</li>
+                  <li>Tu tarjeta está vinculada a tu número de WhatsApp para que nunca pierdas tu progreso.</li>
+                </ul>
+              </div>
+            )}
 
-        </div>
+            {/* Guest Search Card (if not logged in) */}
+            {!session && (
+              <form onSubmit={handleGuestSearch} className="bg-surface-container p-4 rounded-sm border border-outline-variant/30 space-y-3">
+                <p className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">
+                  Consultar otra tarjeta por número de teléfono:
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="tel"
+                    placeholder="+971 50 ..."
+                    value={guestPhone}
+                    onChange={(e) => setGuestPhone(e.target.value)}
+                    className="flex-1 bg-background border border-outline-variant/30 text-on-surface px-3 py-2 text-xs rounded-sm outline-none focus:border-primary"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-primary text-background font-bold text-xs uppercase px-4 py-2 rounded-sm hover:bg-primary-container"
+                  >
+                    Consultar
+                  </button>
+                </div>
+              </form>
+            )}
+
+          </div>
+        )}
 
         {/* RIGHT COLUMN: User Information & Settings */}
-        <div className="lg:col-span-6 space-y-6">
+        <div className={SHOW_LOYALTY ? "lg:col-span-6 space-y-6" : "w-full space-y-6"}>
           <div className="space-y-2">
             <div className="inline-flex items-center space-x-2 bg-primary/10 border border-primary/20 px-3 py-1 rounded-full text-primary font-mono text-[11px] font-bold">
               <User className="w-3.5 h-3.5" />
@@ -395,7 +399,7 @@ export default function Profile({
                 <div className="space-y-1">
                   <h3 className="font-serif text-lg font-bold text-primary">Inicia Sesión para Personalizar tu Perfil</h3>
                   <p className="text-xs text-on-surface-variant">
-                    Accede a tu cuenta para guardar tus direcciones favoritas y sincronizar tu tarjeta VIP automáticamente.
+                    Accede a tu cuenta para guardar tus direcciones favoritas y agilizar tus pedidos a domicilio en Dubai.
                   </p>
                 </div>
                 <button
