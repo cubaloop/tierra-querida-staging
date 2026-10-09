@@ -83,11 +83,19 @@ export default function Checkout({
 
   // ── Computed totals ──────────────────────────────────────────
   const subtotal = cart.reduce((sum, item) => sum + item.dish.price * item.quantity, 0);
-  
-  // Tarifa fija de 20 AED por mensajería (temporalmente sin cálculo por KM)
-  const deliveryFee = subtotal > 0 ? 20 : 0;
-  const loyaltyDiscount = 0; // Oculto temporalmente
-  const total = Math.max(0, subtotal + deliveryFee);
+  const feePerDelivery = info && info.deliveryFee != null ? Number(info.deliveryFee) : 20;
+
+  // Use GPS-computed fee if available, else static fee from admin settings
+  const deliveryFee = subtotal > 0
+    ? (gpsResult && !gpsResult.outOfRange ? gpsResult.fee : feePerDelivery)
+    : 0;
+
+  // Apply loyalty reward discount
+  const loyaltyDiscount = (loyaltyCard?.rewardReady && subtotal > 0)
+    ? Math.min(LOYALTY_REWARD_MAX, subtotal)
+    : 0;
+
+  const total = Math.max(0, subtotal + deliveryFee - loyaltyDiscount);
 
   // ── GPS handler ───────────────────────────────────────────────
   const handleGPSDetect = useCallback(async () => {
@@ -154,7 +162,7 @@ export default function Checkout({
       items: orderItems,
       subtotal,
       deliveryFee,
-      loyaltyDiscount: 0,
+      loyaltyDiscount,
       total,
       customerName: formData.name,
       customerPhone: formData.phone,
@@ -163,7 +171,7 @@ export default function Checkout({
       paymentStatus: "Pending",
       deliveryTime: formData.deliveryTime === "asap" ? "Lo antes posible (35-45 min)" : "Programado",
       status: "Pendiente",
-      distanceKm: null,
+      distanceKm: gpsResult?.distanceKm || null,
     };
 
     const newOrder = saveOrder(orderData);
@@ -177,6 +185,9 @@ export default function Checkout({
     ticket += `👤 *Cliente:* ${formData.name}\n`;
     ticket += `📞 *Teléfono:* ${formData.phone}\n`;
     ticket += `📍 *Dirección:* ${formData.address}\n`;
+    if (gpsResult && !gpsResult.outOfRange) {
+      ticket += `📏 *Distancia:* ~${formatDistance(gpsResult.distanceKm)} del restaurante\n`;
+    }
     ticket += `⏰ *Entrega:* ${orderData.deliveryTime}\n`;
     ticket += `💵 *Pago:* Efectivo (Contra entrega)\n`;
     ticket += `-------------------------------------------\n`;
@@ -190,7 +201,17 @@ export default function Checkout({
 
     ticket += `-------------------------------------------\n`;
     ticket += `*Subtotal:* ${subtotal} AED\n`;
-    ticket += `*Envío:* ${deliveryFee} AED (Mensajería fija Dubai)\n`;
+    ticket += `*Envío:* ${deliveryFee} AED\n`;
+
+    // Loyalty stamp info
+    const stampsBefore = prizeApplied ? 9 : Math.max(0, (updatedCard?.stamps ?? 1) - 1);
+    const stampsAfter = updatedCard?.stamps ?? 0;
+    ticket += `\n🎯 *Tarjeta Fidelidad:* ${buildStampDisplay(stampsAfter, updatedCard?.rewardReady)}\n`;
+
+    if (prizeApplied) {
+      ticket += `🎁 *PREMIO APLICADO:* -${loyaltyDiscount} AED (¡10 sellos completados!)\n`;
+    }
+
     ticket += `\n*TOTAL DEL PEDIDO:* *${total} AED*\n`;
     ticket += `-------------------------------------------\n`;
     ticket += `¡Muchas gracias por su compra! Su pedido llegará pronto. ✨`;
@@ -219,6 +240,23 @@ export default function Checkout({
               Tu pedido con ID <span className="font-bold text-primary">#{orderId.split("-")[1]}</span> se ha guardado.
             </p>
           </div>
+          {loyaltyDiscount > 0 && (
+            <div className="flex items-center justify-center space-x-2 bg-amber-50 border border-amber-200 px-4 py-3 rounded-sm">
+              <Gift className="w-5 h-5 text-amber-500" />
+              <p className="text-sm font-bold text-amber-700">¡Premio de fidelización aplicado! -{loyaltyDiscount} AED 🎉</p>
+            </div>
+          )}
+          {loyaltyCard && (
+            <div className="max-w-md mx-auto">
+              <LoyaltyCard
+                stamps={loyaltyCard.stamps}
+                cyclesCompleted={loyaltyCard.cyclesCompleted}
+                rewardReady={loyaltyCard.rewardReady}
+                customerName={formData.name || session?.name || "Cliente VIP"}
+                phone={formData.phone || session?.phone || ""}
+              />
+            </div>
+          )}
         </div>
 
         <div className="bg-surface-container p-5 rounded-sm border border-outline-variant/30 text-left font-mono text-xs whitespace-pre-wrap leading-relaxed max-h-60 overflow-y-auto custom-scrollbar">
@@ -287,31 +325,78 @@ export default function Checkout({
                   value={formData.phone} onChange={handleInputChange}
                   className="bg-surface-container border border-outline-variant/30 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary px-4 py-3 text-sm rounded-sm outline-none"
                 />
+                {/* Loyalty card mini preview */}
+                {loyaltyLoading && (
+                  <div className="flex items-center space-x-1 text-[10px] text-on-surface-variant/60">
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <span>Cargando tarjeta...</span>
+                  </div>
+                )}
+                {loyaltyCard && !loyaltyLoading && (
+                  <LoyaltyCard
+                    stamps={loyaltyCard.stamps}
+                    cyclesCompleted={loyaltyCard.cyclesCompleted}
+                    rewardReady={loyaltyCard.rewardReady}
+                    compact
+                  />
+                )}
+                {!loyaltyCard && !loyaltyLoading && formData.phone.length >= 8 && (
+                  <p className="text-[10px] text-on-surface-variant/60 flex items-center space-x-1">
+                    <Star className="w-3 h-3" />
+                    <span>¡Este número no tiene tarjeta aún — se creará al completar tu primer pedido!</span>
+                  </p>
+                )}
               </div>
             </div>
 
-            {/* Address (Tarifa fija de mensajería) */}
+            {/* Address + GPS */}
             <div className="flex flex-col space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">
-                  Dirección de Entrega en Dubai
-                </label>
-                <span className="text-[11px] font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded-sm">
-                  Tarifa fija de mensajería: 20 AED
-                </span>
+              <label className="text-xs font-bold uppercase tracking-wider text-on-surface-variant">Dirección de Entrega en Dubai</label>
+              <div className="flex gap-2">
+                <textarea
+                  name="address" required rows="2"
+                  placeholder="Edificio, apartamento, área en Dubai..."
+                  value={formData.address} onChange={handleInputChange}
+                  className="flex-1 bg-surface-container border border-outline-variant/30 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary px-4 py-3 text-sm rounded-sm outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={handleGPSDetect}
+                  disabled={gpsLoading}
+                  title="Usar mi ubicación GPS para calcular el delivery exacto"
+                  className="self-start bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 px-3 py-3 rounded-sm transition-all flex flex-col items-center justify-center min-w-[60px]"
+                >
+                  {gpsLoading
+                    ? <Loader2 className="w-5 h-5 animate-spin" />
+                    : <Navigation className="w-5 h-5" />
+                  }
+                  <span className="text-[9px] font-bold mt-0.5 uppercase tracking-wide">GPS</span>
+                </button>
               </div>
-              <textarea
-                name="address"
-                required
-                rows="2"
-                placeholder="Edificio, apartamento, calle o zona en Dubai..."
-                value={formData.address}
-                onChange={handleInputChange}
-                className="w-full bg-surface-container border border-outline-variant/30 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary px-4 py-3 text-sm rounded-sm outline-none"
-              />
-              <p className="text-[10px] text-on-surface-variant/60">
-                Entrega a domicilio directa por mensajería en cualquier zona de Dubai (20 AED).
-              </p>
+
+              {/* GPS result */}
+              {gpsResult && !gpsError && (
+                <div className="flex items-center space-x-2 text-[11px] bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-sm text-emerald-700">
+                  <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span>
+                    <strong>{formatDistance(gpsResult.distanceKm)}</strong> del restaurante
+                    {gpsResult.freeDelivery
+                      ? " — 🎉 ¡Envío gratis!"
+                      : ` → Tarifa de envío: ${gpsResult.fee} AED`}
+                  </span>
+                </div>
+              )}
+              {gpsError && (
+                <div className="flex items-start space-x-2 text-[11px] bg-red-50 border border-red-200 px-3 py-2 rounded-sm text-red-700">
+                  <AlertCircle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                  <span>{gpsError}</span>
+                </div>
+              )}
+              {!gpsResult && !gpsError && (
+                <p className="text-[10px] text-on-surface-variant/60">
+                  Toca <strong>GPS</strong> para calcular el costo de delivery exacto según tu distancia al restaurante.
+                </p>
+              )}
             </div>
           </div>
 
@@ -363,6 +448,28 @@ export default function Checkout({
         {/* ── RIGHT: Order Summary ── */}
         <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-4">
           
+          {/* 3D Loyalty Card Presentation */}
+          <div className="space-y-1">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 flex items-center space-x-1">
+                <Gift className="w-3.5 h-3.5" />
+                <span>Tarjeta de Fidelidad 3D (Cuño con Logo)</span>
+              </span>
+              <span className="text-[9px] text-on-surface-variant/70 font-mono">
+                {loyaltyCard ? `${loyaltyCard.stamps}/10 sellos` : "Nuevo Cliente"}
+              </span>
+            </div>
+            
+            <LoyaltyCard
+              stamps={loyaltyCard?.stamps ?? 0}
+              cyclesCompleted={loyaltyCard?.cyclesCompleted ?? 0}
+              rewardReady={loyaltyCard?.rewardReady ?? false}
+              customerName={formData.name || session?.name || "Cliente Tierra Querida"}
+              phone={formData.phone || session?.phone || ""}
+              interactive={true}
+            />
+          </div>
+
           <div className="bg-surface-container-low border border-outline-variant/15 p-8 rounded-sm space-y-8 shadow-sm">
             <h3 className="font-serif text-2xl font-bold text-primary border-b border-outline-variant/20 pb-4">
               Resumen de Compra
@@ -396,31 +503,61 @@ export default function Checkout({
                 <span>{subtotal} AED</span>
               </div>
               <div className="flex justify-between text-sm text-on-surface-variant">
-                <span>Mensajería (Dubai)</span>
+                <div className="flex items-center space-x-1">
+                  <span>Delivery</span>
+                  {gpsResult && !gpsResult.outOfRange && (
+                    <span className="text-[9px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-bold">
+                      GPS ~{formatDistance(gpsResult.distanceKm)}
+                    </span>
+                  )}
+                </div>
                 <span>{deliveryFee} AED</span>
               </div>
+              {loyaltyDiscount > 0 && (
+                <div className="flex justify-between text-sm text-amber-600 font-semibold">
+                  <span className="flex items-center space-x-1">
+                    <Gift className="w-3.5 h-3.5" />
+                    <span>Premio Fidelidad</span>
+                  </span>
+                  <span>-{loyaltyDiscount} AED</span>
+                </div>
+              )}
               <div className="flex justify-between text-lg font-bold text-primary border-t border-primary/10 pt-4 mt-2">
                 <span>Total Pedido</span>
                 <span>{total} AED</span>
               </div>
             </div>
 
-            {/* Delivery flat fee info */}
-            <div className="bg-surface-container border border-outline-variant/20 rounded-sm p-3.5 space-y-1">
-              <div className="flex items-center space-x-1.5 text-primary font-bold text-xs uppercase tracking-wide">
-                <span>🛵 Envío a Domicilio</span>
+            {/* Delivery rates info */}
+            {!gpsResult && (
+              <div className="bg-surface-container border border-outline-variant/20 rounded-sm p-3 space-y-1.5">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-on-surface-variant">Tarifas de Envío</p>
+                {rates.map((tier, i) => (
+                  <div key={i} className="flex justify-between text-[11px] text-on-surface-variant/80">
+                    <span>{tier.minKm} – {tier.maxKm} km</span>
+                    <span className="font-semibold">{tier.fee} AED</span>
+                  </div>
+                ))}
+                <p className="text-[10px] text-on-surface-variant/60 mt-1">
+                  Usa el botón GPS para calcular la tarifa exacta para tu dirección.
+                </p>
               </div>
-              <p className="text-[11px] text-on-surface-variant/80 leading-relaxed">
-                Tarifa fija de mensajería para toda la ciudad de Dubai: <strong>20 AED</strong>.
-              </p>
-            </div>
+            )}
+
+            {/* Out of range warning */}
+            {gpsResult?.outOfRange && (
+              <div className="bg-red-50 border border-red-200 rounded-sm p-3 text-[11px] text-red-700">
+                <p className="font-bold">⚠️ Fuera del área de cobertura estándar</p>
+                <p className="mt-1">Estás a {formatDistance(gpsResult.distanceKm)} del restaurante. Contáctanos directamente por WhatsApp para coordinar el delivery.</p>
+              </div>
+            )}
 
             {/* Submit button */}
             <button
               onClick={() => document.getElementById("hidden-submit").click()}
-              disabled={cart.length === 0}
+              disabled={cart.length === 0 || gpsResult?.outOfRange}
               className={`w-full font-bold py-5 uppercase text-xs tracking-widest flex items-center justify-center space-x-2 transition-all shadow-lg rounded-sm ${
-                cart.length === 0
+                cart.length === 0 || gpsResult?.outOfRange
                   ? "bg-outline-variant text-on-surface-variant/40 cursor-not-allowed"
                   : "bg-primary text-background hover:bg-primary-container active:scale-[0.98]"
               }`}
