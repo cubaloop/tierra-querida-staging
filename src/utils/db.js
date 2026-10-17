@@ -20,6 +20,9 @@ export const setSiteLocked = (locked) => {
   localStorage.setItem(LOCKED_KEY, locked ? "true" : "false");
 };
 
+// Medida temporal de restricción: congelar mutaciones desde el panel de administración
+export const ADMIN_MUTATIONS_FROZEN = true;
+
 // Helpers to read/write from localStorage
 const read = (key, defaultValue) => {
   const data = localStorage.getItem(key);
@@ -390,6 +393,10 @@ export const getDishes = () => {
 };
 
 export const saveDish = async (dish) => {
+  if (ADMIN_MUTATIONS_FROZEN) {
+    console.warn("ADMIN_MUTATIONS_FROZEN: Guardado de platos deshabilitado temporalmente.");
+    return dish;
+  }
   const dishes = getDishes();
   if (dish.id) {
     const index = dishes.findIndex(d => d.id === dish.id);
@@ -421,6 +428,10 @@ export const saveDish = async (dish) => {
 };
 
 export const deleteDish = async (id) => {
+  if (ADMIN_MUTATIONS_FROZEN) {
+    console.warn("ADMIN_MUTATIONS_FROZEN: Eliminación de platos deshabilitada temporalmente.");
+    return;
+  }
   const idStr = String(id);
   const dishes = getDishes();
   const filtered = dishes.filter(d => String(d.id) !== idStr);
@@ -433,6 +444,10 @@ export const deleteDish = async (id) => {
 };
 
 export const resetDishes = () => {
+  if (ADMIN_MUTATIONS_FROZEN) {
+    console.warn("ADMIN_MUTATIONS_FROZEN: Reset de platos deshabilitado temporalmente.");
+    return;
+  }
   write(DISHES_KEY, INITIAL_DISHES);
   if (isSupabaseConfigured) {
     supabase.from("dishes").delete().neq("id", "none").then(() => {
@@ -591,6 +606,10 @@ export const getPromotions = () => {
 };
 
 export const savePromotion = async (promo) => {
+  if (ADMIN_MUTATIONS_FROZEN) {
+    console.warn("ADMIN_MUTATIONS_FROZEN: Guardado de promociones deshabilitado temporalmente.");
+    return promo;
+  }
   const promotions = getPromotions();
   const promoIdStr = promo.id ? String(promo.id) : ("promo-" + Date.now());
   const promoToSave = {
@@ -619,6 +638,10 @@ export const savePromotion = async (promo) => {
 };
 
 export const deletePromotion = async (id) => {
+  if (ADMIN_MUTATIONS_FROZEN) {
+    console.warn("ADMIN_MUTATIONS_FROZEN: Eliminación de promociones deshabilitada temporalmente.");
+    return;
+  }
   const idStr = String(id);
   const promotions = getPromotions();
   const filtered = promotions.filter(p => String(p.id) !== idStr);
@@ -631,6 +654,10 @@ export const deletePromotion = async (id) => {
 };
 
 export const resetPromotions = () => {
+  if (ADMIN_MUTATIONS_FROZEN) {
+    console.warn("ADMIN_MUTATIONS_FROZEN: Reset de promociones deshabilitado temporalmente.");
+    return;
+  }
   write(PROMOTIONS_KEY, INITIAL_PROMOTIONS);
   if (isSupabaseConfigured) {
     supabase.from("promotions").delete().neq("id", "none").then(() => {
@@ -651,6 +678,10 @@ export const getRestaurantInfo = () => {
 };
 
 export const saveRestaurantInfo = async (info) => {
+  if (ADMIN_MUTATIONS_FROZEN) {
+    console.warn("ADMIN_MUTATIONS_FROZEN: Guardado de información deshabilitado temporalmente.");
+    return info;
+  }
   if (info.phone) {
     const cleanPhone = info.phone.replace(/[^0-9]/g, "");
     info.whatsappLink = `https://wa.me/${cleanPhone}`;
@@ -698,6 +729,10 @@ export const saveRestaurantInfo = async (info) => {
 };
 
 export const resetRestaurantInfo = () => {
+  if (ADMIN_MUTATIONS_FROZEN) {
+    console.warn("ADMIN_MUTATIONS_FROZEN: Reset de información deshabilitado temporalmente.");
+    return RESTAURANT_INFO;
+  }
   write(INFO_KEY, RESTAURANT_INFO);
   if (isSupabaseConfigured) {
     const dbInfo = {
@@ -748,6 +783,10 @@ export const getDeliveryRates = () => {
 };
 
 export const saveDeliveryRates = async (config) => {
+  if (ADMIN_MUTATIONS_FROZEN) {
+    console.warn("ADMIN_MUTATIONS_FROZEN: Guardado de tarifas deshabilitado temporalmente.");
+    return config;
+  }
   localStorage.setItem(DELIVERY_RATES_KEY, JSON.stringify(config));
   if (isSupabaseConfigured) {
     const dbPayload = {

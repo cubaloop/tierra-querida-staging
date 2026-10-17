@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Plus, Edit2, Trash2, RotateCcw, Package, ClipboardList, CheckCircle, Clock, Image as ImageIcon, LayoutDashboard, LogOut, Download, DollarSign, ArrowLeft, Settings, Menu as MenuIcon, X as CloseIcon, Eye, Star, MapPin, Loader2, Gift } from "lucide-react";
 import { saveDish, deleteDish, resetDishes, getOrders, savePromotion, deletePromotion, resetPromotions, logoutUser, saveRestaurantInfo, resetRestaurantInfo, uploadRestaurantImage, getDeliveryRates, saveDeliveryRates } from "../utils/db";
 import { getAllLoyaltyCards, adminUpdateLoyaltyCard, upsertLoyaltyCard } from "../utils/loyalty";
@@ -714,17 +714,7 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
               <span>Datos & Configuración</span>
             </button>
 
-            <button
-              onClick={() => { setTab("loyalty"); setEditingDish(null); setEditingPromo(null); setMobileMenuOpen(false); loadLoyaltyCards(); }}
-              className={`w-full flex items-center space-x-3 px-4 py-3.5 text-xs font-bold uppercase tracking-wider rounded-sm transition-all ${
-                tab === "loyalty"
-                  ? "bg-amber-400 text-white shadow-xs font-bold"
-                  : "text-amber-700 hover:bg-amber-50 hover:text-amber-800"
-              }`}
-            >
-              <Gift className="w-4 h-4" />
-              <span>Fidelizaci&#xF3;n &#x1F3AF;</span>
-            </button>
+            {/* Tab fidelización oculto temporalmente */}
           </nav>
         </div>
 
@@ -831,17 +821,7 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
               <span>Datos de Contacto</span>
             </button>
 
-            <button
-              onClick={() => { setTab("loyalty"); setEditingDish(null); setEditingPromo(null); loadLoyaltyCards(); }}
-              className={`w-full flex items-center space-x-3 px-4 py-3 text-xs font-bold uppercase tracking-wider rounded-sm transition-all ${
-                tab === "loyalty"
-                  ? "bg-amber-400 text-white shadow-xs font-bold"
-                  : "text-amber-700 hover:bg-amber-50 hover:text-amber-800"
-              }`}
-            >
-              <Gift className="w-4 h-4" />
-              <span>Fidelizaci&#xF3;n &#x1F3AF;</span>
-            </button>
+            {/* Tab fidelización oculto temporalmente */}
           </nav>
         </div>
 

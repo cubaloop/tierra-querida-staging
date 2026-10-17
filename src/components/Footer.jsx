@@ -119,11 +119,6 @@ export default function Footer({ setView, restaurantInfo }) {
                 Eventos Especiales
               </button>
             </li>
-            <li>
-              <button onClick={() => setView("profile")} className="hover:text-primary transition-colors font-medium text-amber-700 dark:text-amber-400">
-                Mi Tarjeta de Fidelidad 3D 🎯
-              </button>
-            </li>
           </ul>
         </div>
 
@@ -178,7 +173,11 @@ export default function Footer({ setView, restaurantInfo }) {
 
       {/* Sub-footer */}
       <div className="max-w-7xl mx-auto px-6 md:px-margin-desktop py-8 border-t border-outline-variant/20 flex flex-col sm:flex-row justify-between items-center gap-4 text-on-surface-variant/60 font-sans text-xs">
-        <span>© {new Date().getFullYear()} Tierra Querida. Todos los derechos reservados.</span>
+        <div className="flex flex-col sm:flex-row items-center gap-2">
+          <span>© {new Date().getFullYear()} Tierra Querida. Todos los derechos reservados.</span>
+          <span className="hidden sm:inline">•</span>
+          <span className="text-on-surface-variant/80 font-medium">Developed by <span className="text-primary font-semibold">Tecnoemprende</span></span>
+        </div>
         
         <div className="flex items-center space-x-2">
           <span className={`w-2 h-2 rounded-full ${isKitchenOpen ? "bg-secondary" : "bg-primary"}`}></span>
