@@ -102,13 +102,13 @@ export default function Navbar({
                   className={`font-sans font-semibold text-xs tracking-wider uppercase px-2.5 py-1.5 rounded-sm border transition-all flex items-center space-x-1.5 ${
                     currentView === "profile"
                       ? "bg-primary text-background border-primary shadow-xs"
-                      : "text-on-surface border-outline-variant/40 bg-surface-container hover:border-primary hover:text-primary"
+                      : "text-on-surface border-amber-500/40 bg-amber-500/5 hover:border-primary hover:text-primary"
                   }`}
-                  title="Ver Mi Perfil"
+                  title="Ver Mi Perfil y Tarjeta de Fidelidad 3D"
                 >
                   <User className="w-3.5 h-3.5 text-primary" />
                   <span className="hidden sm:inline font-bold">
-                    {session.name ? session.name.split(" ")[0] : "Mi Perfil"}
+                    {session.name ? session.name.split(" ")[0] : "Mi Perfil"} 🎯
                   </span>
                   <span className="sm:hidden font-bold">Perfil</span>
                 </button>
@@ -123,6 +123,17 @@ export default function Navbar({
             </div>
           ) : (
             <div className="flex items-center space-x-1">
+              <button
+                onClick={() => setView("profile")}
+                className={`font-sans font-semibold text-xs tracking-wider uppercase px-2 py-1 rounded-sm border transition-all hidden md:flex items-center space-x-1 ${
+                  currentView === "profile"
+                    ? "bg-primary text-background border-primary"
+                    : "text-amber-800 border-amber-500/30 hover:bg-amber-500/10"
+                }`}
+                title="Consultar Tarjeta de Fidelidad"
+              >
+                <span>Tarjeta VIP 🎯</span>
+              </button>
               <button
                 onClick={() => setView("auth")}
                 className="p-2 text-on-surface-variant hover:text-primary transition-colors duration-300"

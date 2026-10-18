@@ -185,8 +185,18 @@ export const upsertLoyaltyCard = async (card) => {
 
 // ─── Admin: manually adjust stamps ─────────────────────────────
 export const adminUpdateLoyaltyCard = async (phone, stamps, cyclesCompleted, rewardReady) => {
-  console.warn("ADMIN_MUTATIONS_FROZEN: Modificación manual de tarjetas deshabilitada.");
-  return getLoyaltyCard(phone);
+  const cleanPhone = phone.replace(/\s/g, "").trim();
+  const card = (await getLoyaltyCard(cleanPhone)) || { phone: cleanPhone, customerName: "", stamps: 0, cyclesCompleted: 0, rewardReady: false };
+
+  const updated = {
+    ...card,
+    stamps: Math.max(0, Math.min(9, Number(stamps))),
+    cyclesCompleted: Math.max(0, Number(cyclesCompleted)),
+    rewardReady: !!rewardReady,
+  };
+
+  await upsertLoyaltyCard(updated);
+  return updated;
 };
 
 // ─── Stamp visual helper ─────────────────────────────────────────

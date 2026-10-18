@@ -20,8 +20,8 @@ export const setSiteLocked = (locked) => {
   localStorage.setItem(LOCKED_KEY, locked ? "true" : "false");
 };
 
-// Medida temporal de restricción: congelar mutaciones desde el panel de administración
-export const ADMIN_MUTATIONS_FROZEN = true;
+// Mutaciones desde el panel de administración reactivadas
+export const ADMIN_MUTATIONS_FROZEN = false;
 
 // Helpers to read/write from localStorage
 const read = (key, defaultValue) => {

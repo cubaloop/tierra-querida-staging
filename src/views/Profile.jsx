@@ -13,8 +13,8 @@ export default function Profile({
   setView,
   onLogout
 }) {
-  // Ocultar temporalmente tarjeta de fidelización (datos protegidos en BD)
-  const SHOW_LOYALTY = false;
+  // Tarjeta de fidelización 3D reactivada
+  const SHOW_LOYALTY = true;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -326,7 +326,7 @@ export default function Profile({
                     className="bg-background border border-outline-variant/30 text-on-surface focus:border-primary focus:ring-1 focus:ring-primary px-4 py-3 text-sm rounded-sm outline-none font-mono"
                   />
                   <span className="text-[10px] text-on-surface-variant/60">
-                    Este teléfono se usa para contactarte y coordinar tus pedidos.
+                    Este teléfono se usa para acreditar tus cuños oficiales y generar tus tickets.
                   </span>
                 </div>
 
@@ -400,7 +400,7 @@ export default function Profile({
                 <div className="space-y-1">
                   <h3 className="font-serif text-lg font-bold text-primary">Inicia Sesión para Personalizar tu Perfil</h3>
                   <p className="text-xs text-on-surface-variant">
-                    Accede a tu cuenta para guardar tus direcciones favoritas y agilizar tus pedidos.
+                    Accede a tu cuenta para guardar tus direcciones favoritas y sincronizar tu tarjeta VIP automáticamente.
                   </p>
                 </div>
                 <button
