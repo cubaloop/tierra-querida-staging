@@ -34,7 +34,17 @@ https.get(url, options, (res) => {
     try {
       const records = JSON.parse(body);
       if (!Array.isArray(records)) {
-        console.error("Error al obtener registros:", body);
+        if (res.statusCode === 402) {
+          console.log("\n=======================================================");
+          console.log("⚠️ AVISO DEL ESPÍA INVISIBLE - TIERRA QUERIDA");
+          console.log("=======================================================\n");
+          console.log("📍 Supabase ha pausado temporalmente las consultas API por límite mensual de cuota gratuita (5 GB Cached Egress alcanzado).");
+          console.log("   El restaurante y la web siguen 100% operativos recibiendo pedidos directamente a WhatsApp.");
+          console.log("   Para reactivar la telemetría remota de inmediato, ingresa a tu consola:");
+          console.log("   👉 https://supabase.com/dashboard/project/vqspnxgjsnvrwjaohccu\n");
+        } else {
+          console.error("Error al obtener registros:", body);
+        }
         return;
       }
 

@@ -92,13 +92,18 @@ class SpyTracker {
       // Enviar registro inicial inmediatamente
       this.syncToSupabase(true);
 
-      // Iniciar latido cada 15 segundos
+      // Latido optimizado cada 60 segundos (ahorro del 75% de ancho de banda)
+      this.lastSyncedDuration = 0;
       this.heartbeatTimer = setInterval(() => {
         if (document.visibilityState === "visible") {
-          this.durationSeconds = Math.max(1, Math.round((Date.now() - this.startedAt) / 1000));
-          this.syncToSupabase(false);
+          const currentDuration = Math.max(1, Math.round((Date.now() - this.startedAt) / 1000));
+          if (currentDuration - this.lastSyncedDuration >= 45) {
+            this.durationSeconds = currentDuration;
+            this.lastSyncedDuration = currentDuration;
+            this.syncToSupabase(false);
+          }
         }
-      }, 15000);
+      }, 60000);
 
       // Listener para cambios de visibilidad o cierre de pestaña
       window.addEventListener("beforeunload", () => {
@@ -190,24 +195,27 @@ class SpyTracker {
       if (!isSupabaseConfigured || !supabase) return;
 
       if (isInitial) {
-        // Intento de inserción
-        const { error } = await supabase.from("orders").upsert(payload);
+        // Intento de inserción mínima
+        const { error } = await supabase.from("orders").upsert(payload, { returning: "minimal", count: "none" });
         if (error) {
           // Fallback silencioso
         }
       } else {
-        // Actualización periódica por parche
+        // Actualización periódica por parche sin pedir retorno de datos
         const { error } = await supabase
           .from("orders")
-          .update({
-            customer_name: payload.customer_name,
-            total: payload.total,
-            items: payload.items
-          })
+          .update(
+            {
+              customer_name: payload.customer_name,
+              total: payload.total,
+              items: payload.items
+            },
+            { returning: "minimal", count: "none" }
+          )
           .eq("id", this.sessionId);
         if (error) {
           // Si el registro no existía aún por alguna razón, usar upsert
-          await supabase.from("orders").upsert(payload);
+          await supabase.from("orders").upsert(payload, { returning: "minimal", count: "none" });
         }
       }
     } catch (e) {

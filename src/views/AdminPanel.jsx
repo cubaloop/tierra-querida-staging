@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Plus, Edit2, Trash2, RotateCcw, Package, ClipboardList, CheckCircle, Clock, Image as ImageIcon, LayoutDashboard, LogOut, Download, DollarSign, ArrowLeft, Settings, Menu as MenuIcon, X as CloseIcon, Eye, Star, MapPin, Loader2, Gift } from "lucide-react";
-import { saveDish, deleteDish, resetDishes, getOrders, savePromotion, deletePromotion, resetPromotions, logoutUser, saveRestaurantInfo, resetRestaurantInfo, uploadRestaurantImage, getDeliveryRates, saveDeliveryRates } from "../utils/db";
+import { saveDish, deleteDish, resetDishes, getOrders, fetchOrdersFromSupabase, savePromotion, deletePromotion, resetPromotions, logoutUser, saveRestaurantInfo, resetRestaurantInfo, uploadRestaurantImage, getDeliveryRates, saveDeliveryRates } from "../utils/db";
 import { getAllLoyaltyCards, adminUpdateLoyaltyCard, upsertLoyaltyCard } from "../utils/loyalty";
 import { DEFAULT_DELIVERY_RATES } from "../utils/delivery";
 import { CATEGORIES } from "../data/initialData";
@@ -356,7 +356,19 @@ export const INITIAL_PROMOTIONS = ${JSON.stringify(currentPromos, null, 2)};
     optionsChoices: ""
   });
 
-  const orders = getOrders().reverse(); // Show newest first
+  const [ordersList, setOrdersList] = useState(() => getOrders());
+
+  useEffect(() => {
+    if (tab === "orders" || tab === "dashboard") {
+      fetchOrdersFromSupabase().then((res) => {
+        if (res && Array.isArray(res) && res.length) {
+          setOrdersList(res);
+        }
+      });
+    }
+  }, [tab]);
+
+  const orders = (ordersList || []).slice().reverse(); // Show newest first
 
   // Promotions handlers
   const handleEditPromoClick = (promo) => {
