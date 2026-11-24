@@ -144,6 +144,17 @@ export default function Menu({ dishes, onSelectDish, onAddToCartQuick, restauran
                         alt={dish.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         loading="lazy"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          const slug = (dish.id || "").toLowerCase().replace(/-/g, "_").replace(/ /g, "_");
+                          const webpFallback = `/images/${slug}.webp`;
+                          if (e.target.src !== window.location.origin + webpFallback) {
+                            e.target.src = webpFallback;
+                          } else {
+                            e.target.style.display = "none";
+                            e.target.parentElement.classList.add("bg-surface-container-high");
+                          }
+                        }}
                       />
                     ) : (
                       <div className="flex flex-col items-center justify-center text-center p-4">

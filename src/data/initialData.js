@@ -58,7 +58,7 @@ export const INITIAL_DISHES = [
     "price": 70,
     "category": "desayunos",
     "description": "Tradicional desayuno colombiano a base de arroz y frijoles, generalmente acompañado de huevos y arepa con queso campesino especial. *No incluye carne.",
-    "image": "/images/Calentado with beans and Rice .jpg.jpeg",
+    "image": "/images/des_2.webp",
     "tags": [
       "Recomendado",
       "Abundante"
@@ -72,7 +72,7 @@ export const INITIAL_DISHES = [
     "price": 50,
     "category": "desayunos",
     "description": "Huevos revueltos esponjosos salteados con champiñones frescos, servidos calientes para un desayuno reconfortante.",
-    "image": "/images/Scrambled eggs whit mushrooms.jpg.jpeg",
+    "image": "/images/des_5.webp",
     "tags": [
       "Saludable",
       "Huevos"
@@ -86,7 +86,7 @@ export const INITIAL_DISHES = [
     "price": 40,
     "category": "desayunos",
     "description": "Huevos revueltos suaves y esponjosos, ligeramente sazonados y cocinados a la perfección. Incluye Arepa.",
-    "image": "/images/Pericos Eggs with Plantains.jpg.jpeg",
+    "image": "/images/des_6.webp",
     "tags": [
       "Sencillo"
     ],
@@ -99,7 +99,7 @@ export const INITIAL_DISHES = [
     "price": 130,
     "category": "entradas",
     "description": "Masa de papa frita crujiente rellena de huevo cocinado picado y carne guisada sazonada. 10 unidades.",
-    "image": "/images/Stuffed Potatoes (Small)10 unit .PNG",
+    "image": "/images/ent_3.webp",
     "tags": [
       "Pasabocas",
       "10 Unidades"
@@ -113,7 +113,7 @@ export const INITIAL_DISHES = [
     "price": 150,
     "category": "entradas",
     "description": "Arepa de maíz frita rellena de huevo, crujiente por fuera y suave por dentro. 5 unidades.",
-    "image": "/images/Egg Arepa (5).PNG",
+    "image": "/images/ent_9.webp",
     "tags": [
       "Costeño",
       "Para compartir"
@@ -127,7 +127,7 @@ export const INITIAL_DISHES = [
     "price": 150,
     "category": "entradas",
     "description": "Diez mini arepas de huevo fritas, un clásico de la costa Caribe colombiana.",
-    "image": "/images/Mini Egg Arepas (x10).PNG",
+    "image": "/images/ent_10.webp",
     "tags": [
       "Pasabocas",
       "Mini"
@@ -141,7 +141,7 @@ export const INITIAL_DISHES = [
     "price": 40,
     "category": "entradas",
     "description": "Plátano maduro frito acompañado de queso colombiano derretido.",
-    "image": "/images/Fried Sweet Plantain with Cheese.PNG",
+    "image": "/images/ent_5.webp",
     "tags": [
       "Dulce y Salado"
     ],
@@ -154,7 +154,7 @@ export const INITIAL_DISHES = [
     "price": 50,
     "category": "entradas",
     "description": "Plátano maduro asado acompañado de queso, combinando sabores dulces y salados.",
-    "image": "/images/Grilled Sweet Plantain with Cheese.PNG",
+    "image": "/images/ent_6.webp",
     "tags": [
       "Horneado",
       "Saludable"
@@ -168,7 +168,7 @@ export const INITIAL_DISHES = [
     "price": 50,
     "category": "entradas",
     "description": "Deliciosos aborrajados de plátano maduro rellenos de queso y cubiertos con una ligera masa. X2 unidades.",
-    "image": "/images/Aborrajados (x2).PNG",
+    "image": "/images/ent_7.webp",
     "tags": [
       "Clásico del Valle",
       "Favorito"
@@ -182,7 +182,7 @@ export const INITIAL_DISHES = [
     "price": 125,
     "category": "entradas",
     "description": "10 unidades de buñuelos tradicionales colombianos, crujientes por fuera y suaves por dentro con queso costeño.",
-    "image": "/images/Colombian Buñuelos (x10).PNG",
+    "image": "/images/ent_11.webp",
     "tags": [
       "Clásico",
       "Frito"
@@ -196,7 +196,7 @@ export const INITIAL_DISHES = [
     "price": 125,
     "category": "entradas",
     "description": "Diez pandebonos tradicionales colombianos, suaves y ligeramente elásticos. 10 unidades.",
-    "image": "/images/Colombian Pandebonos (x10).PNG",
+    "image": "/images/ent_12.webp",
     "tags": [
       "Horneado",
       "Favorito"
@@ -210,7 +210,7 @@ export const INITIAL_DISHES = [
     "price": 125,
     "category": "entradas",
     "description": "Pandebono en forma de rosca, ideal para compartir. 10 unidades.",
-    "image": "/images/Ring-Shaped Pandebono (x10).PNG",
+    "image": "/images/ent_13.webp",
     "tags": [
       "Horneado",
       "Tradicional"
@@ -224,7 +224,7 @@ export const INITIAL_DISHES = [
     "price": 60,
     "category": "entradas",
     "description": "Tres mini arepas de maíz rellenas con queso derretido.",
-    "image": "/images/Mini Cheese Arepas (x3).PNG",
+    "image": "/images/ent_14.webp",
     "tags": [
       "Mini",
       "Queso"
@@ -238,7 +238,7 @@ export const INITIAL_DISHES = [
     "price": 60,
     "category": "entradas",
     "description": "Tres mini arepas de maíz rellenas con pollo desmechado y sazonado.",
-    "image": "/images/Mini Chicken Arepas (x3).PNG",
+    "image": "/images/ent_15.webp",
     "tags": [
       "Mini",
       "Pollo"
@@ -252,7 +252,7 @@ export const INITIAL_DISHES = [
     "price": 60,
     "category": "entradas",
     "description": "Tres mini arepas de maíz rellenas con carne sazonada al estilo tradicional.",
-    "image": "/images/Arepa con carne -AREPA WHIT MEAT  .jpg.jpeg",
+    "image": "/images/ent_16.webp",
     "tags": [
       "Mini",
       "Carne"
@@ -260,14 +260,13 @@ export const INITIAL_DISHES = [
     "optionsTitle": "",
     "optionsChoices": ""
   },
-
   {
     "id": "fuer-2",
     "name": "Ajiaco Santafereño BOGOTÁ",
     "price": 70,
     "category": "fuertes",
     "description": "Sopa tradicional de Bogotá preparada con pollo y tres tipos de papa, acompañada de mazorca, alcaparras, crema de leche, arroz y aguacate.",
-    "image": "/images/Ajiaco santafereño from BOGOTÁ SPECIAL.PNG",
+    "image": "/images/fuer_2.webp",
     "tags": [
       "Sopa de la Casa",
       "Bogotano"
@@ -281,7 +280,7 @@ export const INITIAL_DISHES = [
     "price": 100,
     "category": "fuertes",
     "description": "Sopa tradicional colombiana preparada con pollo, yuca, papa, mazorca y plátano, acompañada de sudado de pollo, arroz y aguacate.",
-    "image": "/images/Sancocho Valluno with Chicken Stew.PNG",
+    "image": "/images/fuer_3.webp",
     "tags": [
       "Tradicional",
       "Muy Completo"
@@ -295,7 +294,7 @@ export const INITIAL_DISHES = [
     "price": 75,
     "category": "fuertes",
     "description": "Tradicional plato de arroz con pollo con papas a la francesa, salchicha 100% de pollo e incluye papas a la francesa y salsa de tomate (Personal).",
-    "image": "/images/ARROZ CON POLLO .jpg.jpeg",
+    "image": "/images/fuer_4.webp",
     "tags": [
       "Casero",
       "Personal"
@@ -309,7 +308,7 @@ export const INITIAL_DISHES = [
     "price": 150,
     "category": "fuertes",
     "description": "Delicioso arroz con pollo especial, preparado con mix de vegetales frescos y salchichas 100% de pollo. Acompañado de papas a la francesa. FULL HD FAMILIAR ESPECIAL.",
-    "image": "/images/Chicken Rice BIG FAMILY .PNG",
+    "image": "/images/fuer_10.webp",
     "tags": [
       "Familiar",
       "Compartir"
@@ -323,7 +322,7 @@ export const INITIAL_DISHES = [
     "price": 60,
     "category": "fuertes",
     "description": "Arroz salteado con chicharrón, platanito maduro, pollo, res y verduras selectas.",
-    "image": "/images/arroz_paisa_especial.jpg",
+    "image": "/images/fuer_5.webp",
     "tags": [
       "Ahumado",
       "Sabor Paisa"
@@ -337,7 +336,7 @@ export const INITIAL_DISHES = [
     "price": 250,
     "category": "fuertes",
     "description": "Porción grande de arroz chino estilo colombiano con camarones, verduras y salsa de soya, ideal para compartir. 6 personas aprox.",
-    "image": "/images/Colombian- Style Fried Rice (Family)fullHD .PNG",
+    "image": "/images/fuer_11.webp",
     "tags": [
       "Familiar",
       "Especial"
@@ -351,7 +350,7 @@ export const INITIAL_DISHES = [
     "price": 150,
     "category": "fuertes",
     "description": "Arroz frito estilo colombiano con camarones, verduras y salsa de soya, ofreciendo una deliciosa fusión de sabores. Para 3 personas aprox.",
-    "image": "/images/Style Fried Rice (personal)x3PEOPLE.PNG",
+    "image": "/images/fuer_18.webp",
     "tags": [
       "Camarones",
       "Fusión"
@@ -365,7 +364,7 @@ export const INITIAL_DISHES = [
     "price": 75,
     "category": "fuertes",
     "description": "Chuleta de pollo apanada y crujiente, acompañada de arroz blanco, papas a la francesa, ensalada.",
-    "image": "/images/Breaded Chicken Cutlet.PNG",
+    "image": "/images/fuer_6.webp",
     "tags": [
       "Apanado",
       "Cali Sabor"
@@ -379,7 +378,7 @@ export const INITIAL_DISHES = [
     "price": 80,
     "category": "salchipapas",
     "description": "Salchicha + Papafrita + Lechuga + AlitasBBQ + Queso + Salsas. Talla M: 80 AED | Talla L: 120 AED | Talla XL: 260 AED.",
-    "image": "/images/SALCHIALITAS  .PNG",
+    "image": "/images/scp_3.webp",
     "tags": [
       "Especial",
       "Alitas"
@@ -393,7 +392,7 @@ export const INITIAL_DISHES = [
     "price": 80,
     "category": "desayunos",
     "description": "Reconfortante sopa colombiana preparada con costilla de res, papas y cilantro, ideal para comenzar el día.",
-    "image": "/images/Beef rib soup .PNG",
+    "image": "/images/des_3.webp",
     "tags": [
       "Levanta Muertos",
       "Caliente"
@@ -407,7 +406,7 @@ export const INITIAL_DISHES = [
     "price": 50,
     "category": "entradas",
     "description": "Crujientes patacones acompañados con el tradicional hogao colombiano a base de tomate y cebolla. ESPECIAL.",
-    "image": "/images/Fried Green Plantains with Hogao.PNG",
+    "image": "/images/ent_1.webp",
     "tags": [
       "Para compartir",
       "Especial"
@@ -421,7 +420,7 @@ export const INITIAL_DISHES = [
     "price": 60,
     "category": "entradas",
     "description": "Crujientes patacones acompañados de guacamole fresco hecho en casa.",
-    "image": "/images/Fried Green Plantains with Guacamole.PNG",
+    "image": "/images/ent_8.webp",
     "tags": [
       "Para compartir",
       "Guacamole"
@@ -435,7 +434,7 @@ export const INITIAL_DISHES = [
     "price": 100,
     "category": "entradas",
     "description": "X5 unidades de papas rellenas colombianas con carne sazonada y fritas hasta quedar doradas.",
-    "image": "/images/Stuffed Potatoes (Large x5).PNG",
+    "image": "/images/ent_2.webp",
     "tags": [
       "Crujiente",
       "Porción Grande"
@@ -449,7 +448,7 @@ export const INITIAL_DISHES = [
     "price": 20,
     "category": "entradas",
     "description": "Arepa de maíz frita y crujiente rellena con un huevo entero, un clásico y querido de la comida callejera colombiana.",
-    "image": "/images/Deep-Fried Corn Cake Filled with Egg.jpg.jpeg",
+    "image": "/images/ent_4.webp",
     "tags": [
       "Costeño",
       "Frito"
@@ -463,7 +462,7 @@ export const INITIAL_DISHES = [
     "price": 75,
     "category": "fuertes",
     "description": "Sudado de pollo cocinado con papas y especias tradicionales, acompañado de arroz blanco, tajadas de plátano maduro, ensalada.",
-    "image": "/images/Chicken Stew Platter Breaded.PNG",
+    "image": "/images/fuer_7.webp",
     "tags": [
       "Casero",
       "Guisado"
@@ -477,7 +476,7 @@ export const INITIAL_DISHES = [
     "price": 75,
     "category": "fuertes",
     "description": "Tierna carne de res cocinada lentamente en una rica salsa a base de tomate con verduras y especias, acompañada de arroz blanco y patacones.",
-    "image": "/images/Colombian style Goulash (special dish).PNG",
+    "image": "/images/fuer_8.webp",
     "tags": [
       "Carne",
       "Tradicional"
@@ -491,7 +490,7 @@ export const INITIAL_DISHES = [
     "price": 75,
     "category": "fuertes",
     "description": "Bistec de res a la parrilla coronado con un huevo frito, acompañado de arroz blanco, tajadas y ensalada. Un plato colombiano tradicional y satisfactorio.",
-    "image": "/images/Steak with Fried Egg.PNG",
+    "image": "/images/fuer_9.webp",
     "tags": [
       "Con Huevo",
       "Satisfactorio"
@@ -505,7 +504,7 @@ export const INITIAL_DISHES = [
     "price": 85,
     "category": "fuertes",
     "description": "Plato tradicional colombiano preparado con una deliciosa mezcla de arroz y frijoles, acompañado de tajadas de plátano maduro, carne asada, huevo frito y arepa con queso.",
-    "image": "/images/Calentado with beans and Rice .jpg.jpeg",
+    "image": "/images/fuer_14.webp",
     "tags": [
       "Paisa",
       "Reconfortante"
@@ -519,7 +518,7 @@ export const INITIAL_DISHES = [
     "price": 85,
     "category": "fuertes",
     "description": "Frijoles rojos tradicionales acompañados de arroz blanco, tajadas de plátano maduro, carne asada. Un plato casero y reconfortante.",
-    "image": "/images/BOWL DE FRIJOLES .jpg.jpeg",
+    "image": "/images/fuer_15.webp",
     "tags": [
       "Tradicional",
       "Frijoles"
@@ -533,7 +532,7 @@ export const INITIAL_DISHES = [
     "price": 75,
     "category": "fuertes",
     "description": "Lentejas colombianas acompañadas de arroz blanco, tajadas de plátano maduro. Un plato nutritivo y reconfortante.",
-    "image": "/images/BOWL DE LENTEJAS .jpg.jpeg",
+    "image": "/images/fuer_16.webp",
     "tags": [
       "Casero",
       "Nutritivo"
@@ -547,7 +546,7 @@ export const INITIAL_DISHES = [
     "price": 85,
     "category": "fuertes",
     "description": "Deliciosas lentejas mezcladas con arroz, acompañadas de carne asada, tajadas de plátano maduro, huevo frito y arepa con queso.",
-    "image": "/images/BOWL DE LENTEJAS .jpg.jpeg",
+    "image": "/images/fuer_17.webp",
     "tags": [
       "Lentejas",
       "Sabor Casero"
@@ -561,7 +560,7 @@ export const INITIAL_DISHES = [
     "price": 75,
     "category": "fuertes",
     "description": "Lentejas colombianas servidas con arroz blanco, tajadas de plátano maduro, ensalada especial y pechuga a la plancha. Un plato nutritivo y reconfortante.",
-    "image": "/images/Lentil platter chicken.PNG",
+    "image": "/images/fuer_12.webp",
     "tags": [
       "Saludable",
       "Lentejas"
@@ -575,7 +574,7 @@ export const INITIAL_DISHES = [
     "price": 85,
     "category": "fuertes",
     "description": "Lentejas guisadas servidas con jugoso filete de carne de res asada, arroz blanco, patacones y ensalada del día.",
-    "image": "/images/Lentils with Grilled Beef special.PNG",
+    "image": "/images/fuer_13.webp",
     "tags": [
       "Recomendado",
       "Casero"
@@ -589,7 +588,7 @@ export const INITIAL_DISHES = [
     "price": 55,
     "category": "bowls",
     "description": "Arroz, frijoles, carne desmechada, huevo frito, salchichas, plátano frito y aguacate.",
-    "image": "/images/BOWL DE FRIJOLES .jpg.jpeg",
+    "image": "/images/bowl_1.webp",
     "tags": [
       "Bowl",
       "Frijoles"
@@ -603,7 +602,7 @@ export const INITIAL_DISHES = [
     "price": 55,
     "category": "bowls",
     "description": "Arroz, lentejas, carne desmechada, huevo frito, salchichas, plátano frito y aguacate.",
-    "image": "/images/BOWL DE LENTEJAS .jpg.jpeg",
+    "image": "/images/bowl_2.webp",
     "tags": [
       "Bowl",
       "Lentejas"
@@ -617,7 +616,7 @@ export const INITIAL_DISHES = [
     "price": 55,
     "category": "bowls",
     "description": "Arroz con pollo, salchichas, papas a la francesa, tomate y aguacate.",
-    "image": "/images/ARROZ CON POLLO .jpg.jpeg",
+    "image": "/images/bowl_3.webp",
     "tags": [
       "Bowl",
       "Pollo"
@@ -631,7 +630,7 @@ export const INITIAL_DISHES = [
     "price": 55,
     "category": "bowls",
     "description": "Gulash de res servido en base de arroz blanco con tajadas de plátano maduro y aguacate fresco.",
-    "image": "/images/BOWL DE GULASH .PNG",
+    "image": "/images/bowl_4.webp",
     "tags": [
       "Bowl",
       "Gulash"
@@ -645,7 +644,7 @@ export const INITIAL_DISHES = [
     "price": 55,
     "category": "arepas",
     "description": "Arepa de maíz dorada a la plancha, rellena con abundante queso derretido campesino. Crujiente por fuera y suave por dentro, con el auténtico sabor casero colombiano.",
-    "image": "/images/Arepa con queso -AREPA WHIT CHESSE.PNG",
+    "image": "/images/arp_1.webp",
     "tags": [
       "Arepa",
       "Queso"
@@ -659,7 +658,7 @@ export const INITIAL_DISHES = [
     "price": 65,
     "category": "arepas",
     "description": "Arepa de maíz dorada a la plancha, rellena con jugoso pollo desmechado sazonado al estilo colombiano. Crujiente por fuera y suave por dentro.",
-    "image": "/images/Arepa con pollo- AREPA WHIT CHICKEN.JPEG",
+    "image": "/images/arp_2.webp",
     "tags": [
       "Arepa",
       "Pollo"
@@ -673,7 +672,7 @@ export const INITIAL_DISHES = [
     "price": 65,
     "category": "arepas",
     "description": "Arepa de maíz dorada a la plancha, rellena con jugosa carne desmechada sazonada al estilo colombiano. Crujiente por fuera y suave por dentro.",
-    "image": "/images/Arepa con carne -AREPA WHIT MEAT  .jpg.jpeg",
+    "image": "/images/arp_3.webp",
     "tags": [
       "Arepa",
       "Carne"
@@ -687,7 +686,7 @@ export const INITIAL_DISHES = [
     "price": 75,
     "category": "arepas",
     "description": "Arepa de maíz dorada a la plancha, cargada con carne desmechada y pollo desmechado, coronada con queso cheddar y mozzarella derretidos, maíz dulce y huevo de codorniz.",
-    "image": "/images/Arepa Full HD -Arepa MIX chicken and Beff .PNG",
+    "image": "/images/arp_4.webp",
     "tags": [
       "Favorito",
       "Arepa Cargada"
@@ -701,7 +700,7 @@ export const INITIAL_DISHES = [
     "price": 65,
     "category": "arepas",
     "description": "Arepa dorada a la plancha, rellena con cremoso guacamole, plátano maduro dulce, maíz tierno y queso mozzarella derretido, coronada con huevos de codorniz y maizitos.",
-    "image": "/images/Arepa vegan 🌱 .PNG",
+    "image": "/images/arp_5.webp",
     "tags": [
       "Vegetariano",
       "Completo"
@@ -715,7 +714,7 @@ export const INITIAL_DISHES = [
     "price": 65,
     "category": "comidas-rapidas",
     "description": "Pan, salchicha jumbo, salsa casera, cebolla o pepinillos, queso derretido, maíz dulce, papitas, tocineta, 3 huevos de codorniz y salsa de piña, acompañado de papas a la francesa y salsa roja.",
-    "image": "",
+    "image": "/images/cr_1.webp",
     "tags": [
       "Callejero",
       "Estilo Colombiano"
@@ -729,7 +728,7 @@ export const INITIAL_DISHES = [
     "price": 60,
     "category": "comidas-rapidas",
     "description": "Plátano maduro o verde frito, lechuga, pollo desmechado, carne desmechada, salsa casera, huevo de codorniz y queso derretido.",
-    "image": "",
+    "image": "/images/cr_2.webp",
     "tags": [
       "Patacón",
       "Callejero"
@@ -743,7 +742,7 @@ export const INITIAL_DISHES = [
     "price": 75,
     "category": "comidas-rapidas",
     "description": "Alitas BBQ o Miel-Mostaza, acompañadas de papas a la francesa y salsa roja.",
-    "image": "",
+    "image": "/images/cr_3.webp",
     "tags": [
       "Alitas",
       "Para picar"
@@ -757,7 +756,7 @@ export const INITIAL_DISHES = [
     "price": 300,
     "category": "comidas-rapidas",
     "description": "Carne y pollo en trozos, alitas BBQ, patacones, empanadas, arepa, tomate, limón, ají y guacamole.",
-    "image": "",
+    "image": "/images/cr_4.webp",
     "tags": [
       "Compartir",
       "Carnes"
@@ -771,7 +770,7 @@ export const INITIAL_DISHES = [
     "price": 550,
     "category": "comidas-rapidas",
     "description": "Carne y pollo en trozos, alitas BBQ, plátano verde frito, empanadas, arepa, tomate, limón, ají y guacamole.",
-    "image": "",
+    "image": "/images/cr_5.webp",
     "tags": [
       "Fiesta",
       "Compartir"
@@ -785,7 +784,7 @@ export const INITIAL_DISHES = [
     "price": 1000,
     "category": "comidas-rapidas",
     "description": "Porción extra gigante de picada de 3 carnes, arepas, patacones, empanadas y salsa especiales. Ideal para fiestas o eventos grandes (16 personas). VERY SPECIAL.",
-    "image": "",
+    "image": "/images/cr_6.webp",
     "tags": [
       "Mega Party",
       "Eventos"
@@ -799,7 +798,7 @@ export const INITIAL_DISHES = [
     "price": 130,
     "category": "promos",
     "description": "Paquete de empanadas de maíz crujientes rellenas a elegir con ají y salsa de la casa gratis.",
-    "image": "",
+    "image": "/images/prm_1.webp",
     "tags": [
       "Promo",
       "Ideal Reuniones"
@@ -813,7 +812,7 @@ export const INITIAL_DISHES = [
     "price": 20,
     "category": "promos",
     "description": "Empanada individual crujiente de maíz rellena de carne, pollo o queso.",
-    "image": "",
+    "image": "/images/prm_2.webp",
     "tags": [
       "Pasabocas"
     ],
@@ -826,7 +825,7 @@ export const INITIAL_DISHES = [
     "price": 60,
     "category": "saludable",
     "description": "Plato fitness: Selección de una proteína limpia, carbohidrato complejo y ensalada saludable al vapor o fresca.",
-    "image": "",
+    "image": "/images/sal_1.webp",
     "tags": [
       "Fitness",
       "Equilibrado"
@@ -840,7 +839,7 @@ export const INITIAL_DISHES = [
     "price": 10,
     "category": "ensaladas",
     "description": "Lechuga crujiente, pepino, manzana verde, aguacate fresco, aceitunas y apio picado.",
-    "image": "",
+    "image": "/images/ens_1.webp",
     "tags": [
       "Ensalada",
       "Fresco"
@@ -854,7 +853,7 @@ export const INITIAL_DISHES = [
     "price": 10,
     "category": "ensaladas",
     "description": "Ensalada cremosa de papas y zanahorias cocidas en cubitos, con cilantro, arvejas tiernas y mayonesa.",
-    "image": "",
+    "image": "/images/ens_2.webp",
     "tags": [
       "Cremoso",
       "Tradicional"
@@ -868,7 +867,7 @@ export const INITIAL_DISHES = [
     "price": 67,
     "category": "salchipapas",
     "description": "Salchicha + Papa Frita + Queso + huevo de codorniz + salsas. Talla M: 67 AED | Talla L: 99 AED | Talla XL: 133 AED.",
-    "image": "/images/SALCHIPAPA TRADICIONAL.PNG",
+    "image": "/images/scp_1.webp",
     "tags": [
       "Salchipapa",
       "Tradicional"
@@ -882,7 +881,7 @@ export const INITIAL_DISHES = [
     "price": 80,
     "category": "salchipapas",
     "description": "Salchicha + Papa Frita + Lechuga + Pollo Desmechado + Carne Desmechada + Tocineta + Queso + Salsas. Talla M: 80 AED | Talla L: 120 AED | Talla XL: 260 AED.",
-    "image": "/images/Salchiquerida .jpg.jpeg",
+    "image": "/images/scp_2.webp",
     "tags": [
       "Suprema",
       "Cargado"
@@ -896,7 +895,7 @@ export const INITIAL_DISHES = [
     "price": 133,
     "category": "salchipapas",
     "description": "Salchicha + Papa Frita + 3 Carnes + Lechuga + Queso + Salsas. Talla M: 133 AED | Talla L: 200 AED | Talla XL: 335 AED.",
-    "image": "/images/Salchi-Especial .PNG",
+    "image": "/images/scp_4.webp",
     "tags": [
       "Premium",
       "Cargada"
@@ -910,7 +909,7 @@ export const INITIAL_DISHES = [
     "price": 10,
     "category": "adicionales",
     "description": "Porción de arroz blanco.",
-    "image": "",
+    "image": "/images/adi_1.webp",
     "tags": [],
     "optionsTitle": "",
     "optionsChoices": ""
@@ -921,7 +920,7 @@ export const INITIAL_DISHES = [
     "price": 10,
     "category": "adicionales",
     "description": "Porción de plátano maduro frito en tajadas.",
-    "image": "/images/Fried Sweet Plantain with Cheese.PNG",
+    "image": "/images/adi_2.webp",
     "tags": [],
     "optionsTitle": "",
     "optionsChoices": ""
@@ -932,7 +931,7 @@ export const INITIAL_DISHES = [
     "price": 10,
     "category": "adicionales",
     "description": "Porción de plátanos verdes fritos.",
-    "image": "/images/Fried Green Plantains with Hogao.PNG",
+    "image": "/images/adi_3.webp",
     "tags": [],
     "optionsTitle": "",
     "optionsChoices": ""
@@ -943,7 +942,7 @@ export const INITIAL_DISHES = [
     "price": 10,
     "category": "adicionales",
     "description": "Porción de frijoles rojos colombianos.",
-    "image": "/images/BOWL DE FRIJOLES .jpg.jpeg",
+    "image": "/images/adi_4.webp",
     "tags": [],
     "optionsTitle": "",
     "optionsChoices": ""
@@ -954,7 +953,7 @@ export const INITIAL_DISHES = [
     "price": 10,
     "category": "adicionales",
     "description": "Porción de lentejas colombianas.",
-    "image": "/images/BOWL DE LENTEJAS .jpg.jpeg",
+    "image": "/images/adi_5.webp",
     "tags": [],
     "optionsTitle": "",
     "optionsChoices": ""
@@ -965,7 +964,7 @@ export const INITIAL_DISHES = [
     "price": 10,
     "category": "adicionales",
     "description": "Huevo extra frito o cocinado.",
-    "image": "/images/Pericos Eggs with Plantains.jpg.jpeg",
+    "image": "/images/adi_6.webp",
     "tags": [],
     "optionsTitle": "",
     "optionsChoices": ""
@@ -976,7 +975,7 @@ export const INITIAL_DISHES = [
     "price": 10,
     "category": "adicionales",
     "description": "Porción de aguacate fresco en rodajas.",
-    "image": "/images/Fried Green Plantains with Guacamole.PNG",
+    "image": "/images/adi_7.webp",
     "tags": [],
     "optionsTitle": "",
     "optionsChoices": ""
@@ -987,7 +986,7 @@ export const INITIAL_DISHES = [
     "price": 5,
     "category": "bebidas",
     "description": "Lata de refresco a elección fría (Coca-Cola, Sprite, Fanta).",
-    "image": "",
+    "image": "/images/beb_1.webp",
     "tags": [
       "Refresco"
     ],
@@ -1000,7 +999,7 @@ export const INITIAL_DISHES = [
     "price": 20,
     "category": "bebidas",
     "description": "Refrescos importados directamente de Colombia (Colombiana, Manzana Postobón o Pony Malta).",
-    "image": "",
+    "image": "/images/beb_2.webp",
     "tags": [
       "Importado",
       "Patria"
@@ -1008,14 +1007,13 @@ export const INITIAL_DISHES = [
     "optionsTitle": "",
     "optionsChoices": ""
   },
-
   {
     "id": "beb-5",
     "name": "Limonada Natural",
     "price": 15,
     "category": "bebidas",
     "description": "Zumo de limones frescos con hielo y endulzado al gusto.",
-    "image": "",
+    "image": "/images/beb_5.webp",
     "tags": [
       "Refrescante"
     ],
@@ -1028,7 +1026,7 @@ export const INITIAL_DISHES = [
     "price": 15,
     "category": "bebidas",
     "description": "Bebida tradicional de infusión de panela con zumo de limón fresco, servida bien fría.",
-    "image": "",
+    "image": "/images/beb_6.webp",
     "tags": [
       "Tradicional",
       "Refrescante"
@@ -1042,7 +1040,7 @@ export const INITIAL_DISHES = [
     "price": 10,
     "category": "bebidas",
     "description": "Chocolate caliente tradicional colombiano preparado en agua o leche, ideal para acompañar el queso de arepa.",
-    "image": "",
+    "image": "/images/beb_7.webp",
     "tags": [
       "Caliente",
       "Tradicional"
@@ -1056,7 +1054,7 @@ export const INITIAL_DISHES = [
     "price": 50,
     "category": "desayunos",
     "description": "Tradicionales huevos pericos colombianos con tomate y cebolla larga, acompañados de crujientes patacones.",
-    "image": "/images/Pericos Eggs with Plantains.jpg.jpeg",
+    "image": "/images/des_1.webp",
     "tags": [
       "Tradicional",
       "Huevos"
@@ -1070,7 +1068,7 @@ export const INITIAL_DISHES = [
     "price": 50,
     "category": "desayunos",
     "description": "Sopa tradicional bogotana preparada con leche, huevos pochados y hierbas frescas, servida con pan y arroz.",
-    "image": "/images/Changua (Milk and Egg Soup).jpg.jpeg",
+    "image": "/images/des_4.webp",
     "tags": [
       "Tradicional",
       "Boyacense"
@@ -1084,13 +1082,83 @@ export const INITIAL_DISHES = [
     "price": 90,
     "category": "fuertes",
     "description": "INCLUYEN 3 carnes \nChorizo \nCarne asada \nCarne desmechada \nTajadas \nAguacate \nArroz \nFrijoles \nHuevo ",
-    "image": "/images/bandeja_paisa_dubai.png",
+    "image": "/images/custom_1784883081556.webp",
     "tags": [
       "Familiar",
       "Especial"
     ],
     "optionsTitle": "",
     "optionsChoices": ""
+  },
+  {
+    "id": "jugo-1",
+    "name": "Jugo Natural de Maracuyá",
+    "price": 15,
+    "category": "jugos-naturales",
+    "description": "Refrescante jugo natural de maracuyá preparado al instante con fruta fresca seleccionada. Puedes elegirlo preparado en agua o en leche.",
+    "image": "/images/jugo_1.webp",
+    "tags": [
+      "Natural",
+      "Popular"
+    ],
+    "optionsTitle": "Preparación",
+    "optionsChoices": "En Agua, En Leche (+5 AED)"
+  },
+  {
+    "id": "jugo-2",
+    "name": "Jugo Natural de Mora",
+    "price": 15,
+    "category": "jugos-naturales",
+    "description": "Jugo tradicional de mora andina fresca colombiana, servido bien frío. Puedes elegirlo preparado en agua o en leche.",
+    "image": "/images/jugo_2.webp",
+    "tags": [
+      "Natural",
+      "Clásico"
+    ],
+    "optionsTitle": "Preparación",
+    "optionsChoices": "En Agua, En Leche (+5 AED)"
+  },
+  {
+    "id": "jugo-3",
+    "name": "Jugo Natural de Lulo",
+    "price": 15,
+    "category": "jugos-naturales",
+    "description": "Auténtico jugo de lulo colombiano con su inconfundible sabor cítrico tropical y abundante hielo. Preparado en agua o en leche.",
+    "image": "/images/jugo_3.webp",
+    "tags": [
+      "Natural",
+      "Tradicional"
+    ],
+    "optionsTitle": "Preparación",
+    "optionsChoices": "En Agua, En Leche (+5 AED)"
+  },
+  {
+    "id": "jugo-4",
+    "name": "Jugo Natural de Mango",
+    "price": 15,
+    "category": "jugos-naturales",
+    "description": "Delicioso jugo de mango maduro, dulce y cremoso, preparado con pulpa 100% natural al momento.",
+    "image": "/images/jugo_4.webp",
+    "tags": [
+      "Natural",
+      "Dulce"
+    ],
+    "optionsTitle": "Preparación",
+    "optionsChoices": "En Agua, En Leche (+5 AED)"
+  },
+  {
+    "id": "jugo-5",
+    "name": "Jugo Natural de Guanábana",
+    "price": 15,
+    "category": "jugos-naturales",
+    "description": "Cremoso, suave y exquisito jugo de guanábana natural, preparado al instante en agua o leche.",
+    "image": "/images/jugo_5.webp",
+    "tags": [
+      "Natural",
+      "Especial"
+    ],
+    "optionsTitle": "Preparación",
+    "optionsChoices": "En Agua, En Leche (+5 AED)"
   }
 ];
 

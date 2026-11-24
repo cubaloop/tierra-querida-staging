@@ -38,12 +38,24 @@ export const initDB = () => {
   if (!localStorage.getItem(DISHES_KEY)) {
     write(DISHES_KEY, INITIAL_DISHES);
   } else {
-    // Migration: Inject new dishes added to INITIAL_DISHES that don't exist in localStorage
+    // Migration: Update existing dishes to optimized WebP image paths and inject new dishes
     try {
       const dishes = read(DISHES_KEY, []);
       let updated = false;
+
+      // 1. Update image paths for existing dishes to reliable lightweight WebP
+      dishes.forEach((d) => {
+        const matchingInitial = INITIAL_DISHES.find(init => init.id === d.id);
+        if (matchingInitial && matchingInitial.image) {
+          // If the current image is an old PNG/JPEG with spaces or missing, update to WebP
+          if (!d.image || d.image.endsWith(".PNG") || d.image.endsWith(".jpeg") || d.image.includes(" ")) {
+            d.image = matchingInitial.image;
+            updated = true;
+          }
+        }
+      });
       
-      // Inject new dishes added to INITIAL_DISHES that don't exist in localStorage
+      // 2. Inject new dishes added to INITIAL_DISHES (e.g. natural juices) that don't exist in localStorage
       INITIAL_DISHES.forEach(initialDish => {
         const exists = dishes.some(d => d.id === initialDish.id);
         if (!exists) {
@@ -299,18 +311,27 @@ export const syncFromSupabase = async (force = false) => {
       .select("*")
       .order("created_at", { ascending: true });
 
-    if (!dishesError && dishes) {
-      const mappedDishes = dishes.map(d => ({
-        id: d.id,
-        name: d.name,
-        price: Number(d.price),
-        category: d.category,
-        description: d.description || "",
-        image: d.image || "",
-        tags: d.tags ? d.tags.split(",").map(t => t.trim()) : [],
-        optionsTitle: d.options_title || "",
-        optionsChoices: d.options_choices || ""
-      }));
+    if (!dishesError && dishes && dishes.length > 0) {
+      const mappedDishes = dishes.map(d => {
+        const slug = (d.id || "").toLowerCase().replace(/-/g, "_").replace(/ /g, "_");
+        const defaultWebp = `/images/${slug}.webp`;
+        let img = d.image || "";
+        // If the database has an old space-separated path or empty image, prioritize the clean local WebP
+        if (!img || img.endsWith(".PNG") || img.endsWith(".jpeg") || img.includes(" ")) {
+          img = defaultWebp;
+        }
+        return {
+          id: d.id,
+          name: d.name,
+          price: Number(d.price),
+          category: d.category,
+          description: d.description || "",
+          image: img,
+          tags: d.tags ? d.tags.split(",").map(t => t.trim()) : [],
+          optionsTitle: d.options_title || "",
+          optionsChoices: d.options_choices || ""
+        };
+      });
       write(DISHES_KEY, mappedDishes);
     }
 

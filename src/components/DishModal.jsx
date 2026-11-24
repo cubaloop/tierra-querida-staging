@@ -52,6 +52,14 @@ export default function DishModal({ dish, onClose, onAddToCart }) {
               src={dish.image}
               alt={dish.name}
               className="absolute inset-0 w-full h-full object-cover"
+              onError={(e) => {
+                e.target.onerror = null;
+                const slug = (dish.id || "").toLowerCase().replace(/-/g, "_").replace(/ /g, "_");
+                const webpFallback = `/images/${slug}.webp`;
+                if (e.target.src !== window.location.origin + webpFallback) {
+                  e.target.src = webpFallback;
+                }
+              }}
             />
           ) : (
             <div className="flex flex-col items-center justify-center text-center p-8">
